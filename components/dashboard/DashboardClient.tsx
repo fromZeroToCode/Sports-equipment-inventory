@@ -32,10 +32,15 @@ const TAB_MAP: Record<string, string> = {
 export default function DashboardClient() {
 	useSessionRedirectToLogin();
 	const router = useRouter();
-	const searchParams = useSearchParams();
+	let searchParams;
+	try {
+		searchParams = useSearchParams();
+	} catch {
+		searchParams = null;
+	}
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
-	const initialTab = searchParams.get("tab") || "dashboard";
+	const initialTab = searchParams?.get("tab") || "dashboard";
 	const [activeTab, setActiveTab] = useState(initialTab);
 
 	const navItems = [
@@ -92,18 +97,25 @@ export default function DashboardClient() {
 
 	const handleTabClick = (tab: string) => {
 		setActiveTab(tab);
-		router.push(`/dashboard?tab=${tab}`, { scroll: false });
+		if (typeof window !== "undefined") {
+			router.push(`/dashboard?tab=${tab}`, { scroll: false });
+		}
 	};
 
 	useEffect(() => {
-		setActiveTab(initialTab);
-	}, [initialTab]);
+		if (searchParams) {
+			const newTab = searchParams.get("tab") || "dashboard";
+			setActiveTab(newTab);
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
-		const tab = (searchParams?.get("tab") ?? "dashboard").toLowerCase();
-		document.title = `Sports Equipment Inventory | ${
-			TAB_MAP[tab] ?? "Dashboard"
-		}`;
+		if (typeof window !== "undefined" && searchParams) {
+			const tab = (searchParams.get("tab") ?? "dashboard").toLowerCase();
+			document.title = `Sports Equipment Inventory | ${
+				TAB_MAP[tab] ?? "Dashboard"
+			}`;
+		}
 	}, [searchParams]);
 
 	const renderActiveTab = () => {
