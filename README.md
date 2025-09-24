@@ -33,7 +33,7 @@ It allows users to **add, view, edit, and monitor equipment items** while provid
 ---
 
 ## 🛠️ Tech Stack
-- **Frontend Framework:** Next.js / Nuxt.js / SvelteKit (to be finalized)  
-- **Deployment:** Vercel / GitHub Pages  
+- **Frontend Framework:** Next.js 
+- **Deployment:** GitHub Pages  
 - **Version Control:** Git + GitHub  
 
