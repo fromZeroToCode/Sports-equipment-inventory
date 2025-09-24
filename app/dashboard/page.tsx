@@ -1,10 +1,25 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Menu, LogOut, User, Home, Package, Tag, Truck, BarChart, Settings } from "lucide-react";
+import {
+	Menu,
+	LogOut,
+	User,
+	Home,
+	Package,
+	Tag,
+	Truck,
+	BarChart,
+	Settings,
+} from "lucide-react";
 import { logoutUser } from "@/lib/dashboard";
 import { toastError, toastSuccess } from "@/composables/toast";
 import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
+
+import HomeComponent from "@/components/dashboard/homeComponent";
+
+// mock data
+import generateMockData from "@/utils/generateMockData";
 
 const TAB_MAP: Record<string, string> = {
 	findroute: "Find Route",
@@ -24,12 +39,36 @@ export default function DashboardPage() {
 	const [activeTab, setActiveTab] = useState(initialTab);
 
 	const navItems = [
-		{ name: "Dashboard", value: "dashboard", icon: <Home className="h-5 w-5" /> },
-		{ name: "Items", value: "items", icon: <Package className="h-5 w-5" /> },
-		{ name: "Categories", value: "categories", icon: <Tag className="h-5 w-5" /> },
-		{ name: "Suppliers", value: "suppliers", icon: <Truck className="h-5 w-5" /> },
-		{ name: "Reports", value: "reports", icon: <BarChart className="h-5 w-5" /> },
-		{ name: "Settings", value: "settings", icon: <Settings className="h-5 w-5" /> },
+		{
+			name: "Dashboard",
+			value: "dashboard",
+			icon: <Home className="h-5 w-5" />,
+		},
+		{
+			name: "Items",
+			value: "items",
+			icon: <Package className="h-5 w-5" />,
+		},
+		{
+			name: "Categories",
+			value: "categories",
+			icon: <Tag className="h-5 w-5" />,
+		},
+		{
+			name: "Suppliers",
+			value: "suppliers",
+			icon: <Truck className="h-5 w-5" />,
+		},
+		{
+			name: "Reports",
+			value: "reports",
+			icon: <BarChart className="h-5 w-5" />,
+		},
+		{
+			name: "Settings",
+			value: "settings",
+			icon: <Settings className="h-5 w-5" />,
+		},
 	];
 
 	const onMenuClick = () => setSidebarOpen((s) => !s);
@@ -38,7 +77,10 @@ export default function DashboardPage() {
 		try {
 			const success = await logoutUser();
 			if (success) {
-				toastSuccess("Logged out", "You have been logged out successfully.");
+				toastSuccess(
+					"Logged out",
+					"You have been logged out successfully."
+				);
 				router.push("/");
 				return;
 			}
@@ -59,19 +101,58 @@ export default function DashboardPage() {
 
 	useEffect(() => {
 		const tab = (searchParams?.get("tab") ?? "dashboard").toLowerCase();
-		document.title = `Sports Equipment Inventory | ${TAB_MAP[tab] ?? "Dashboard"}`;
+		document.title = `Sports Equipment Inventory | ${
+			TAB_MAP[tab] ?? "Dashboard"
+		}`;
 	}, [searchParams]);
+
+	const renderActiveTab = () => {
+		switch (activeTab) {
+			case "dashboard":
+				return <HomeComponent />;
+			case "items":
+				return <div>Items Component (to be implemented)</div>;
+			case "categories":
+				return <div>Categories Component (to be implemented)</div>;
+			case "suppliers":
+				return <div>Suppliers Component (to be implemented)</div>;
+			case "reports":
+				return <div>Reports Component (to be implemented)</div>;
+			case "settings":
+				return <div>Settings Component (to be implemented)</div>;
+			default:
+				return <HomeComponent />;
+		}
+	};
+
+	// generate mock data
+	const handleGenerateMockData = () => {
+		if (
+			typeof window === "undefined" ||
+			typeof localStorage === "undefined"
+		) {
+			alert("Mock data generation must run in a browser environment");
+			return;
+		}
+
+		generateMockData();
+		window.location.reload();
+	};
 
 	return (
 		<div className="flex h-screen bg-gray-100">
 			{/* Sidebar */}
 			<aside
 				className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 transform z-30 transition-transform duration-200 ease-in-out
-                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+                    ${
+						sidebarOpen ? "translate-x-0" : "-translate-x-full"
+					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
 				<div className="flex items-center h-16 px-4 bg-blue-600">
-					<h1 className="text-xl font-bold text-white">Sports Inventory</h1>
+					<h1 className="text-xl font-bold text-white">
+						Sports Inventory
+					</h1>
 				</div>
 
 				<div className="flex-1 flex flex-col overflow-y-auto">
@@ -80,12 +161,18 @@ export default function DashboardPage() {
 							{navItems.map((item) => (
 								<li key={item.name}>
 									<button
-										onClick={() => handleTabClick(item.value)}
+										onClick={() =>
+											handleTabClick(item.value)
+										}
 										className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md ${
-											activeTab === item.value ? "bg-blue-100" : "hover:bg-gray-100 "
+											activeTab === item.value
+												? "bg-blue-100"
+												: "hover:bg-gray-100 "
 										}`}
 									>
-										<span className="mr-3">{item.icon}</span>
+										<span className="mr-3">
+											{item.icon}
+										</span>
 										<span>{item.name}</span>
 									</button>
 								</li>
@@ -120,14 +207,18 @@ export default function DashboardPage() {
 							<Menu className="h-6 w-6" aria-hidden="true" />
 						</button>
 
-						<h2 className="text-xl font-semibold text-gray-800 hidden lg:block">Sports Inventory App</h2>
+						<h2 className="text-xl font-semibold text-gray-800 hidden lg:block">
+							Sports Inventory App
+						</h2>
 
 						<div className="flex items-center">
 							<div className="flex items-center mr-4">
 								<div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
 									<User className="h-5 w-5 text-gray-500" />
 								</div>
-								<span className="ml-2 text-sm font-medium text-gray-700">Admin</span>
+								<span className="ml-2 text-sm font-medium text-gray-700">
+									Admin
+								</span>
 							</div>
 							<button
 								onClick={handleLogout}
@@ -140,11 +231,16 @@ export default function DashboardPage() {
 					</div>
 				</header>
 
-				<main className="p-6 overflow-auto">
-					<h3 className="text-2xl font-semibold mb-4">Dashboard</h3>
-					<p className="text-gray-600">Welcome to the dashboard. Select a menu item to get started.</p>
-				</main>
+				<main className="p-6 overflow-auto">{renderActiveTab()}</main>
 			</div>
+
+			{/* button for generating data */}
+			<button
+				onClick={handleGenerateMockData}
+				className="fixed bottom-4 right-4 bg-blue-600 text-white p-2 rounded-md shadow-md"
+			>
+				Generate Mock Data
+			</button>
 		</div>
 	);
 }
