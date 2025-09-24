@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { toastError, toastSuccess } from "@/composables/toast";
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSessionRedirectToDashboard } from "@/hooks/useSessionRedirect";
 
 import { loginUser } from "@/lib/auth";
 
 export default function login() {
+	useSessionRedirectToDashboard();
+
 	const router = useRouter();
 	const [form, setForm] = useState({
 		username: "",

@@ -1,8 +1,8 @@
 const isBrowser = typeof window !== "undefined" && typeof window.crypto !== "undefined";
 
 const SECRET = isBrowser
-	? process.env.NEXT_PUBLIC_SESSION_HASH_SECRET || "dev_session_secret"
-	: process.env.SESSION_HASH_SECRET || "dev_session_secret";
+	? process.env.NEXT_PUBLIC_SESSION_HASH_SECRET || "b3f5c2a1d9e4b78f6c2a9e0f3b4d1c2e5f6a7b8c9d0e1f2034a5b6c7d8e9f0a1"
+	: process.env.SESSION_HASH_SECRET || "b3f5c2a1d9e4b78f6c2a9e0f3b4d1c2e5f6a7b8c9d0e1f2034a5b6c7d8e9f0a1";
 
 function bufToHex(buf: ArrayBuffer | Uint8Array): string {
 	const bytes = new Uint8Array(buf);

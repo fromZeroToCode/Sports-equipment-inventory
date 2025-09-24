@@ -2,8 +2,8 @@ import { hashSession } from "@/utils/encrypt";
 
 export async function loginUser(username: string, password: string) {
 	try {
-		const usernameT = process.env.NEXT_PUBLIC_USERNAME;
-		const passwordT = process.env.NEXT_PUBLIC_PASSWORD;
+		const usernameT = "admin";
+		const passwordT = "admin123";
 
 		if (username === usernameT && password === passwordT) {
 			const session = await hashSession(JSON.stringify({ username, timestamp: Date.now() }));
