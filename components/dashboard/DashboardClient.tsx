@@ -29,7 +29,7 @@ const TAB_MAP: Record<string, string> = {
 	dashboard: "Dashboard",
 };
 
-export default function DashboardPage() {
+export default function DashboardClient() {
 	useSessionRedirectToLogin();
 	const router = useRouter();
 	const searchParams = useSearchParams();
