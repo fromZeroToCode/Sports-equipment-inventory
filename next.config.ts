@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
 		root: process.cwd(),
 	},
 	// basePath: "/Sports-equipment-inventory",
-	// assetPrefix: "/Sports-equipment-inventory",
+	assetPrefix: "/Sports-equipment-inventory",
 	output: "export",
 	trailingSlash: true,
 };
