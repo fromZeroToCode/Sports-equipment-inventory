@@ -12,6 +12,11 @@ function getCookie(name: string): string | null {
 	return m ? decodeURIComponent(m[1]) : null;
 }
 
+function normalize(p?: string | null) {
+	if (!p) return "/";
+	return (p || "").replace(/\/$/, "") || "/";
+}
+
 function stripBasePath(pathname: string): string {
 	const bp = BASE_PATH === "/" ? "" : BASE_PATH.replace(/\/$/, "");
 	if (!bp) return pathname;
@@ -62,7 +67,7 @@ export function useSessionRedirectToLogin() {
 		).replace(/\/$/, "");
 
 		if (current === "/dashboard" || current.startsWith("/dashboard/")) {
-			const target = BASE_PATH || "/";
+			const target = normalize(BASE_PATH || "/");
 			console.log("Redirecting to login:", target);
 			router.replace(target);
 		}

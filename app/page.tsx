@@ -84,9 +84,7 @@ export default function login() {
 			}
 
 			toastSuccess("Login successful", "Welcome back!");
-			setTimeout(() => {
-				router.push("/dashboard");
-			}, 1000);
+			router.push("/dashboard");
 		} catch (error) {
 			toastError(
 				"Login failed",
