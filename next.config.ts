@@ -1,8 +1,13 @@
-/** @type {import('next').NextConfig} */
-const basePath = process.env.BASE_PATH || "";
-module.exports = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+	turbopack: {
+		root: process.cwd(),
+	},
+	basePath: "/Sports-equipment-inventory",
+	assetPrefix: "/Sports-equipment-inventory",
 	output: "export",
 	trailingSlash: true,
-	basePath,
-	assetPrefix: basePath || "",
 };
+
+export default nextConfig;

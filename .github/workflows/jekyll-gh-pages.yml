@@ -18,6 +18,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         env:
+            BASE_PATH: "/Sports-equipment-inventory"
             NEXT_PUBLIC_USERNAME: ${{ secrets.NEXT_PUBLIC_USERNAME }}
             NEXT_PUBLIC_PASSWORD: ${{ secrets.NEXT_PUBLIC_PASSWORD }}
             NEXT_PUBLIC_ALGORITHM: ${{ secrets.NEXT_PUBLIC_ALGORITHM }}
