@@ -63,6 +63,7 @@ export function useSessionRedirectToLogin() {
 		if (current === "/dashboard" || current.startsWith("/dashboard/")) {
 			const target = "/";
 			router.replace(target);
+			
 		}
 	}, [pathname, router]);
 }
