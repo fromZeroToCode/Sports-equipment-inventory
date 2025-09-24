@@ -56,7 +56,7 @@ export function useSessionRedirectToLogin() {
 		const current = stripBasePath(pathname ?? window.location.pathname).replace(/\/$/, "");
 
 		if (current === "/dashboard" || current.startsWith("/dashboard/")) {
-			const target = BASE_PATH || "/";
+			const target = "/";
 			console.log("Redirecting to login:", target);
 			router.replace(target);
 		}

@@ -1,13 +1,39 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Menu, LogOut, User, Home, Package, Tag, Truck, BarChart, Settings } from "lucide-react";
 import { logoutUser } from "@/lib/dashboard";
-import { useRouter } from "next/navigation";
 import { toastError, toastSuccess } from "@/composables/toast";
 import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
+
+const TAB_MAP: Record<string, string> = {
+	findroute: "Find Route",
+	traffics: "Traffics",
+	reports: "Reports",
+	settings: "Settings",
+	dashboard: "Dashboard",
+};
 
 export default function DashboardPage() {
 	useSessionRedirectToLogin();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+
+	const initialTab = searchParams.get("tab") || "dashboard";
+	const [activeTab, setActiveTab] = useState(initialTab);
+
+	const navItems = [
+		{ name: "Dashboard", value: "dashboard", icon: <Home className="h-5 w-5" /> },
+		{ name: "Items", value: "items", icon: <Package className="h-5 w-5" /> },
+		{ name: "Categories", value: "categories", icon: <Tag className="h-5 w-5" /> },
+		{ name: "Suppliers", value: "suppliers", icon: <Truck className="h-5 w-5" /> },
+		{ name: "Reports", value: "reports", icon: <BarChart className="h-5 w-5" /> },
+		{ name: "Settings", value: "settings", icon: <Settings className="h-5 w-5" /> },
+	];
+
+	const onMenuClick = () => setSidebarOpen((s) => !s);
+
 	const handleLogout = async () => {
 		try {
 			const success = await logoutUser();
@@ -17,17 +43,108 @@ export default function DashboardPage() {
 				return;
 			}
 			toastError("Logout failed", "An error occurred while logging out.");
-			return;
-		} catch (error) {
+		} catch {
 			toastError("Logout failed", "An error occurred while logging out.");
 		}
 	};
 
+	const handleTabClick = (tab: string) => {
+		setActiveTab(tab);
+		router.push(`/dashboard?tab=${tab}`, { scroll: false });
+	};
+
+	useEffect(() => {
+		setActiveTab(initialTab);
+	}, [initialTab]);
+
+	useEffect(() => {
+		const tab = (searchParams?.get("tab") ?? "dashboard").toLowerCase();
+		document.title = `Sports Equipment Inventory | ${TAB_MAP[tab] ?? "Dashboard"}`;
+	}, [searchParams]);
+
 	return (
-		<div>
-			<h1>Dashboard</h1>
-			<button onClick={handleLogout}>Logout</button>
-			<p>Welcome to the dashboard!</p>
+		<div className="flex h-screen bg-gray-100">
+			{/* Sidebar */}
+			<aside
+				className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 transform z-30 transition-transform duration-200 ease-in-out
+                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+				aria-hidden={!sidebarOpen && true}
+			>
+				<div className="flex items-center h-16 px-4 bg-blue-600">
+					<h1 className="text-xl font-bold text-white">Sports Inventory</h1>
+				</div>
+
+				<div className="flex-1 flex flex-col overflow-y-auto">
+					<nav className="flex-1 px-2 py-4">
+						<ul className="space-y-1">
+							{navItems.map((item) => (
+								<li key={item.name}>
+									<button
+										onClick={() => handleTabClick(item.value)}
+										className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md ${
+											activeTab === item.value ? "bg-blue-100" : "hover:bg-gray-100 "
+										}`}
+									>
+										<span className="mr-3">{item.icon}</span>
+										<span>{item.name}</span>
+									</button>
+								</li>
+							))}
+							<li>
+								<button
+									onClick={handleLogout}
+									className="w-full flex items-center px-4 py-2 text-sm font-medium text-left hover:bg-gray-100 rounded-md"
+								>
+									<span className="mr-3">
+										<LogOut className="h-5 w-5" />
+									</span>
+									<span>Log out</span>
+								</button>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</aside>
+
+			{/* Main content area */}
+			<div className="flex-1 flex flex-col lg:pl-64">
+				{/* header */}
+				<header className="bg-white shadow-sm z-10">
+					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+						<button
+							type="button"
+							className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+							onClick={onMenuClick}
+						>
+							<span className="sr-only">Open sidebar</span>
+							<Menu className="h-6 w-6" aria-hidden="true" />
+						</button>
+
+						<h2 className="text-xl font-semibold text-gray-800 hidden lg:block">Sports Inventory App</h2>
+
+						<div className="flex items-center">
+							<div className="flex items-center mr-4">
+								<div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+									<User className="h-5 w-5 text-gray-500" />
+								</div>
+								<span className="ml-2 text-sm font-medium text-gray-700">Admin</span>
+							</div>
+							<button
+								onClick={handleLogout}
+								className="inline-flex items-center p-2 text-gray-500 rounded-full hover:bg-gray-100"
+								aria-label="Log out"
+							>
+								<LogOut className="h-5 w-5" />
+							</button>
+						</div>
+					</div>
+				</header>
+
+				<main className="p-6 overflow-auto">
+					<h3 className="text-2xl font-semibold mb-4">Dashboard</h3>
+					<p className="text-gray-600">Welcome to the dashboard. Select a menu item to get started.</p>
+				</main>
+			</div>
 		</div>
 	);
 }
