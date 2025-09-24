@@ -39,7 +39,7 @@ export function useSessionRedirectToDashboard() {
 		).replace(/\/$/, "");
 
 		if (current === "/" || current === "") {
-			const target = `/dashboard`;
+			const target = `/dashboard/`;
 			console.log("Redirecting to dashboard:", target);
 			router.replace(target);
 		}
