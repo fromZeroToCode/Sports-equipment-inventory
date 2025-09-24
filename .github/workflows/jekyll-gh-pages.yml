@@ -35,10 +35,9 @@ jobs:
               run: npm ci
 
             - name: Build (Next.js static export)
-              # build + export produces ./out by default
+              # next.config.js sets output: "export" so `next build` produces ./out
               run: |
                   npm run build
-                  npx next export
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
