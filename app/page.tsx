@@ -45,8 +45,14 @@ export default function login() {
 		}
 
 		// type validation
-		if (typeof form.username !== "string" || typeof form.password !== "string") {
-			toastError("Invalid form data", "Please check your input and try again.");
+		if (
+			typeof form.username !== "string" ||
+			typeof form.password !== "string"
+		) {
+			toastError(
+				"Invalid form data",
+				"Please check your input and try again."
+			);
 			return false;
 		}
 
@@ -58,7 +64,10 @@ export default function login() {
 		e.preventDefault();
 
 		if (!validateForm()) {
-			toastError("Invalid form data", "Please check your input and try again.");
+			toastError(
+				"Invalid form data",
+				"Please check your input and try again."
+			);
 			return;
 		}
 
@@ -67,14 +76,20 @@ export default function login() {
 
 			const response = await loginUser(form.username, form.password);
 			if (!response) {
-				toastError("Login failed", "Invalid username or password. Please try again.");
+				toastError(
+					"Login failed",
+					"Invalid username or password. Please try again."
+				);
 				return;
 			}
 
 			toastSuccess("Login successful", "Welcome back!");
 			router.push("/dashboard");
 		} catch (error) {
-			toastError("Login failed", "Invalid username or password. Please try again.");
+			toastError(
+				"Login failed",
+				"Invalid username or password. Please try again."
+			);
 		} finally {
 			setSubmitting(false);
 		}
@@ -95,15 +110,22 @@ export default function login() {
 					<div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
 						<Lock className="text-white" size={24} />
 					</div>
-					<h1 className="text-3xl font-bold text-gray-800">Sports Inventory</h1>
-					<p className="text-gray-600 mt-2">Sign in to manage your inventory</p>
+					<h1 className="text-3xl font-bold text-gray-800">
+						Sports Inventory
+					</h1>
+					<p className="text-gray-600 mt-2">
+						Sign in to manage your inventory
+					</p>
 				</div>
 
 				{/* form */}
 				<form onSubmit={handleSubmit} className="space-y-6">
 					{/* username field */}
 					<div>
-						<label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="username">
+						<label
+							className="block text-gray-700 text-sm font-medium mb-2"
+							htmlFor="username"
+						>
 							Username
 						</label>
 						<div className="relative">
@@ -117,22 +139,36 @@ export default function login() {
 										: "border-gray-300 focus:ring-blue-500"
 								}`}
 								value={form.username}
-								onChange={(e) => handleInputChange("username", e.target.value)}
+								onChange={(e) =>
+									handleInputChange(
+										"username",
+										e.target.value
+									)
+								}
 								required
 							/>
 							<Mail
 								className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-									errors.username ? "text-red-400" : "text-gray-400"
+									errors.username
+										? "text-red-400"
+										: "text-gray-400"
 								}`}
 								size={20}
 							/>
 						</div>
-						{errors.username && <p className="mt-1 text-sm text-red-600">{errors.username}</p>}
+						{errors.username && (
+							<p className="mt-1 text-sm text-red-600">
+								{errors.username}
+							</p>
+						)}
 					</div>
 
 					{/* password field */}
 					<div>
-						<label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="password">
+						<label
+							className="block text-gray-700 text-sm font-medium mb-2"
+							htmlFor="password"
+						>
 							Password
 						</label>
 						<div className="relative">
@@ -146,12 +182,19 @@ export default function login() {
 										: "border-gray-300 focus:ring-blue-500"
 								}`}
 								value={form.password}
-								onChange={(e) => handleInputChange("password", e.target.value)}
+								onChange={(e) =>
+									handleInputChange(
+										"password",
+										e.target.value
+									)
+								}
 								required
 							/>
 							<Lock
 								className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-									errors.password ? "text-red-400" : "text-gray-400"
+									errors.password
+										? "text-red-400"
+										: "text-gray-400"
 								}`}
 								size={20}
 							/>
@@ -160,10 +203,18 @@ export default function login() {
 								className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
 								onClick={() => setShowPassword(!showPassword)}
 							>
-								{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+								{showPassword ? (
+									<EyeOff size={20} />
+								) : (
+									<Eye size={20} />
+								)}
 							</button>
 						</div>
-						{errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+						{errors.password && (
+							<p className="mt-1 text-sm text-red-600">
+								{errors.password}
+							</p>
+						)}
 					</div>
 
 					<button
@@ -173,7 +224,10 @@ export default function login() {
 					>
 						{submitting ? (
 							<>
-								<Loader2 className="animate-spin mr-2" size={20} />
+								<Loader2
+									className="animate-spin mr-2"
+									size={20}
+								/>
 								Signing in...
 							</>
 						) : (
@@ -183,7 +237,9 @@ export default function login() {
 				</form>
 
 				<div className="mt-6 text-center">
-					<p className="text-sm text-gray-600">Sports Inventory App &copy; 2025. All rights reserved.</p>
+					<p className="text-sm text-gray-600">
+						Sports Inventory App &copy; 2025. All rights reserved.
+					</p>
 				</div>
 			</div>
 		</div>

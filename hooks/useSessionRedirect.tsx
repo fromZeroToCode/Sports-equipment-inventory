@@ -2,7 +2,9 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-const BASE_PATH = (process.env.BASE_PATH ?? "/Sports-equipment-inventory").replace(/\/$/, "");
+const BASE_PATH = (
+	process.env.BASE_PATH ?? "/Sports-equipment-inventory"
+).replace(/\/$/, "");
 
 function getCookie(name: string): string | null {
 	if (typeof document === "undefined") return null;
@@ -32,7 +34,9 @@ export function useSessionRedirectToDashboard() {
 		const session = getCookie("session");
 		if (!session) return;
 
-		const current = stripBasePath(pathname ?? window.location.pathname).replace(/\/$/, "");
+		const current = stripBasePath(
+			pathname ?? window.location.pathname
+		).replace(/\/$/, "");
 
 		if (current === "/" || current === "") {
 			const target = `/dashboard`;
@@ -53,10 +57,12 @@ export function useSessionRedirectToLogin() {
 		const session = getCookie("session");
 		if (session) return;
 
-		const current = stripBasePath(pathname ?? window.location.pathname).replace(/\/$/, "");
+		const current = stripBasePath(
+			pathname ?? window.location.pathname
+		).replace(/\/$/, "");
 
 		if (current === "/dashboard" || current.startsWith("/dashboard/")) {
-			const target = "/";
+			const target = BASE_PATH || "/";
 			console.log("Redirecting to login:", target);
 			router.replace(target);
 		}
