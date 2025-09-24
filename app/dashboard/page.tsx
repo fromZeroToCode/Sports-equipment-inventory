@@ -1,7 +1,7 @@
 export const revalidate = 0;
 
 import React, { Suspense } from "react";
-import DashboardClient from "./DashboardClient";
+import DashboardClient from "../../components/dashboard/DashboardClient";
 
 export default function Page() {
 	return (
