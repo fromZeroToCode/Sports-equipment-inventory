@@ -10,8 +10,12 @@ import {
 	deleteItem,
 } from "@/utils/manipulateData";
 import ItemForm from "./itemComponent/itemForm";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function ItemsComponent() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const isAddMode = searchParams?.get("mode") === "add";
 	const [items, setItems] = useState<Item[]>([]);
 	const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -53,6 +57,11 @@ export default function ItemsComponent() {
 		setFilteredItems(sortedItems);
 		setCategories(loadedCategories);
 		setSuppliers(loadedSuppliers);
+		if (isAddMode) {
+			setShowForm(true);
+			setEditingId(undefined);
+		}
+		router.replace("/dashboard/?tab=items");
 	}, []);
 
 	// re-sort when sortOrder changes
@@ -134,6 +143,7 @@ export default function ItemsComponent() {
 		setPage(1);
 		setShowForm(false);
 		setEditingId(undefined);
+		router.replace("/dashboard/?tab=items");
 	};
 
 	const getCategoryName = (categoryId: string): string => {

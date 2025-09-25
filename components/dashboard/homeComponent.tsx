@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Plus, List, Tag, Package, Truck } from "lucide-react";
 import RecentItems from "@/components/dashboard/homeDashboard/recentItems";
 import LowStockAlert from "@/components/dashboard/homeDashboard/lowStockAlert";
+import { useRouter } from "next/navigation";
 
 export default function HomeComponent() {
+	const router = useRouter();
 	const [totalCategories, setTotalCategories] = useState(0);
 	const [totalSuppliers, setTotalSuppliers] = useState(0);
 	const [totalItems, setTotalItems] = useState(0);
@@ -25,12 +27,19 @@ export default function HomeComponent() {
 		setTotalItems(inventory ? JSON.parse(inventory).length : 0);
 	}, []);
 
+	const addNewItem = () => {
+		router.replace("/dashboard/?tab=items&mode=add");
+	};
+
 	return (
 		<div className="space-y-6">
 			<div className="flex justify-between items-center">
 				<h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
 				<div className="flex space-x-2">
-					<button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all duration-150">
+					<button
+						onClick={addNewItem}
+						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all duration-150"
+					>
 						<Plus className="h-4 w-4 mr-1" />
 						Add Item
 					</button>
