@@ -81,7 +81,16 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 								className="flex items-center justify-between px-4 py-3"
 							>
 								<div className="min-w-0">
-									<div className="text-sm font-medium text-gray-800 hover:underline cursor-pointer">
+									<div
+										onClick={() =>
+											router.replace(
+												`/dashboard/?tab=items&search=${encodeURIComponent(
+													it.name
+												)}`
+											)
+										}
+										className="text-sm font-medium text-gray-800 hover:underline cursor-pointer"
+									>
 										{it.name}
 									</div>
 									<div className="text-xs text-gray-500">

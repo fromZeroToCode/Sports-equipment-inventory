@@ -50,8 +50,8 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 					No recent items
 				</div>
 			) : (
-				<div className="overflow-auto">
-					<table className="min-w-full table-fixed text-sm">
+				<div className="overflow-auto ">
+					<table className="min-w-full table-fixed text-sm ">
 						<thead className="bg-gray-50">
 							<tr>
 								<th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
@@ -71,8 +71,15 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 						<tbody>
 							{items.map((it) => (
 								<tr
+									onClick={() =>
+										router.replace(
+											`/dashboard/?tab=items&search=${encodeURIComponent(
+												it.name
+											)}`
+										)
+									}
 									key={it.id}
-									className="hover:bg-gray-50 last:border-b-0 border-b border-gray-200"
+									className="hover:bg-gray-50 last:border-b-0 border-b border-gray-200 cursor-pointer"
 								>
 									<td className="px-4 py-3">
 										<div className="flex items-center gap-3">

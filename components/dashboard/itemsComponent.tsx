@@ -16,6 +16,7 @@ export default function ItemsComponent() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isAddMode = searchParams?.get("mode") === "add";
+	const searchedItems = searchParams?.get("search") || "";
 	const [items, setItems] = useState<Item[]>([]);
 	const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -60,6 +61,10 @@ export default function ItemsComponent() {
 		if (isAddMode) {
 			setShowForm(true);
 			setEditingId(undefined);
+		}
+		if (searchedItems) {
+			setSearchTerm(searchedItems);
+			setPage(1);
 		}
 		router.replace("/dashboard/?tab=items");
 	}, []);
