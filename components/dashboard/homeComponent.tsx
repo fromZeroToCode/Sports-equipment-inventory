@@ -92,7 +92,7 @@ export default function HomeComponent() {
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<RecentItems limit={6} />
+				<RecentItems limit={7} />
 				<LowStockAlert limit={5} />
 			</div>
 		</div>

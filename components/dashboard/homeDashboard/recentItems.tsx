@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { Calendar, Box } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Item } from "@/utils/types";
 
 export default function RecentItems({ limit = 6 }: { limit?: number }) {
+	const router = useRouter();
 	const [items, setItems] = useState<Item[]>([]);
 
 	useEffect(() => {
@@ -36,12 +37,12 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 						Recently Added
 					</h3>
 				</div>
-				<Link
-					href="/items"
+				<button
+					onClick={() => router.replace("/dashboard/?tab=items")}
 					className="text-sm text-blue-600 hover:underline"
 				>
 					View all
-				</Link>
+				</button>
 			</div>
 
 			{items.length === 0 ? (
