@@ -9,7 +9,7 @@ import {
 	getSuppliers,
 	deleteItem,
 } from "@/utils/manipulateData";
-import ItemForm from "./itemComponent/itemForm";
+import ItemForm from "./itemComponentForm/itemForm";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function ItemsComponent() {
@@ -148,12 +148,12 @@ export default function ItemsComponent() {
 
 	const getCategoryName = (categoryId: string): string => {
 		const category = categories.find((c) => c.id === categoryId);
-		return category ? category.name : "Unknown";
+		return category ? category.name : "Other";
 	};
 
 	const getSupplierName = (supplierId: string): string => {
 		const supplier = suppliers.find((s) => s.id === supplierId);
-		return supplier ? supplier.name : "Unknown";
+		return supplier ? supplier.name : "Other";
 	};
 
 	const getStatusBadgeClass = (status: string): string => {

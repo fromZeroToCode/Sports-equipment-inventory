@@ -18,6 +18,8 @@ import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
 
 import HomeComponent from "@/components/dashboard/homeComponent";
 import ItemsComponent from "@/components/dashboard/itemsComponent";
+import CategoriesComponent from "@/components/dashboard/categoriesComponent";
+import SupplierComponent from "@/components/dashboard/supplierComponent";
 
 import { clearAllData } from "@/utils/localStorageManipulation";
 
@@ -128,9 +130,9 @@ export default function DashboardClient() {
 			case "items":
 				return <ItemsComponent />;
 			case "categories":
-				return <div>Categories Component (to be implemented)</div>;
+				return <CategoriesComponent />;
 			case "suppliers":
-				return <div>Suppliers Component (to be implemented)</div>;
+				return <SupplierComponent />;
 			case "reports":
 				return <div>Reports Component (to be implemented)</div>;
 			case "settings":

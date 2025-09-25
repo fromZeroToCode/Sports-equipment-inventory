@@ -148,12 +148,12 @@ export const deleteSupplier = (id: string): void => {
 export const getCategoryName = (categoryId: string): string => {
 	const categories = getCategories();
 	const category = categories.find((c) => c.id === categoryId);
-	return category ? category.name : "Unknown";
+	return category ? category.name : "Other";
 };
 
 // Helper function to get supplier name by ID
 export const getSupplierName = (supplierId: string): string => {
 	const suppliers = getSuppliers();
 	const supplier = suppliers.find((s) => s.id === supplierId);
-	return supplier ? supplier.name : "Unknown";
+	return supplier ? supplier.name : "Other";
 };
