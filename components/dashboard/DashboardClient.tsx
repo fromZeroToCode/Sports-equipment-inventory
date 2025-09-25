@@ -20,6 +20,7 @@ import HomeComponent from "@/components/dashboard/homeComponent";
 import ItemsComponent from "@/components/dashboard/itemsComponent";
 import CategoriesComponent from "@/components/dashboard/categoriesComponent";
 import SupplierComponent from "@/components/dashboard/supplierComponent";
+import ReportsComponent from "@/components/dashboard/reportsComponent";
 
 import { clearAllData } from "@/utils/localStorageManipulation";
 
@@ -134,7 +135,7 @@ export default function DashboardClient() {
 			case "suppliers":
 				return <SupplierComponent />;
 			case "reports":
-				return <div>Reports Component (to be implemented)</div>;
+				return <ReportsComponent />;
 			case "settings":
 				return <div>Settings Component (to be implemented)</div>;
 			default:

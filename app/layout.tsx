@@ -3,6 +3,7 @@ import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LoadingProvider } from "@/composables/LoadingManager";
 import { GlobalLoading } from "@/components/GlobalLoader";
+import { icons } from "lucide-react";
 
 export const metadata = {
 	title: "Sports Equipment Inventory",
@@ -16,8 +17,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
-			<link rel="icon" type="image/x-icon" href="/icon.png" />
-
+			<link rel="icon" type="image/png" href="/icon.png" />
 			<body className="bg-slate-50 dark:bg-black ">
 				<LoadingProvider>
 					{children}
