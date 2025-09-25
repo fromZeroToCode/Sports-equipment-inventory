@@ -19,6 +19,8 @@ import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
 import HomeComponent from "@/components/dashboard/homeComponent";
 import ItemsComponent from "@/components/dashboard/itemsComponent";
 
+import { clearAllData } from "@/utils/localStorageManipulation";
+
 // mock data
 import generateMockData from "@/utils/generateMockData";
 
@@ -250,9 +252,19 @@ export default function DashboardClient() {
 			{/* button for generating data */}
 			<button
 				onClick={handleGenerateMockData}
-				className="fixed bottom-4 right-4 bg-blue-600 text-white p-2 rounded-md shadow-md"
+				className="text-xs fixed bottom-4 right-4 bg-blue-600 text-white p-2 rounded-md shadow-md"
 			>
 				Generate Mock Data
+			</button>
+
+			<button
+				onClick={() => {
+					clearAllData();
+					window.location.reload();
+				}}
+				className="text-xs fixed bottom-4 right-56 bg-blue-600 text-white p-2 rounded-md shadow-md"
+			>
+				delete all data
 			</button>
 		</div>
 	);
