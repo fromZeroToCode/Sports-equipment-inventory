@@ -9,10 +9,14 @@ export const metadata = {
 	description: "Sports equipment inventory management system",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
-			<link rel="icon" type="image/x-icon" href="/icon.svg" />
+			<link rel="icon" type="image/x-icon" href="/icon.png" />
 
 			<body className="bg-slate-50 dark:bg-black ">
 				<LoadingProvider>
@@ -22,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 				<ToastContainer
 					position="bottom-right"
-					autoClose={3000}
+					autoClose={2000}
 					hideProgressBar={false}
 					newestOnTop={false}
 					closeOnClick

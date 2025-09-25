@@ -3,15 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, Box } from "lucide-react";
 
-type Item = {
-	id: string;
-	itemName: string;
-	category: string;
-	quantity: number;
-	location?: string;
-	supplier?: string;
-	created_at?: string;
-};
+import { Item } from "@/utils/types";
 
 export default function RecentItems({ limit = 6 }: { limit?: number }) {
 	const [items, setItems] = useState<Item[]>([]);
@@ -84,16 +76,16 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 									<td className="px-4 py-3">
 										<div className="flex items-center gap-3">
 											<div className="h-9 w-9 rounded-md bg-gray-100 flex items-center justify-center text-gray-600 font-medium">
-												{it.itemName
+												{it.name
 													?.charAt(0)
 													?.toUpperCase() ?? "?"}
 											</div>
 											<div>
 												<div className="font-medium text-gray-800">
-													{it.itemName}
+													{it.name}
 												</div>
 												<div className="text-xs text-gray-500">
-													{it.supplier ??
+													{it.supplierName ??
 														it.location ??
 														"—"}
 												</div>
@@ -103,7 +95,7 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 
 									<td className="px-3 py-3 hidden sm:table-cell">
 										<span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-											{it.category}
+											{it.categoryName}
 										</span>
 									</td>
 

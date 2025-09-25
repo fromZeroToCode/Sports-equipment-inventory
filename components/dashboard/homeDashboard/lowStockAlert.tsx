@@ -3,14 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 
-type Item = {
-	id: string;
-	itemName: string;
-	quantity: number;
-	location?: string;
-	supplier?: string;
-	updated_at?: string;
-};
+import { Item } from "@/utils/types";
 
 type Settings = {
 	lowStockThreshold?: number;
@@ -76,10 +69,12 @@ export default function LowStockAlert({ limit = 10 }: { limit?: number }) {
 						>
 							<div className="min-w-0">
 								<div className="text-sm font-medium text-gray-800 hover:underline cursor-pointer">
-									{it.itemName}
+									{it.name}
 								</div>
 								<div className="text-xs text-gray-500">
-									{it.supplier ? `${it.supplier} • ` : ""}
+									{it.supplierName
+										? `${it.supplierName} • `
+										: ""}
 									{it.location ?? "—"}
 								</div>
 								<div className="text-xs text-gray-400 mt-1">

@@ -17,6 +17,7 @@ import { toastError, toastSuccess } from "@/composables/toast";
 import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
 
 import HomeComponent from "@/components/dashboard/homeComponent";
+import ItemsComponent from "@/components/dashboard/itemsComponent";
 
 // mock data
 import generateMockData from "@/utils/generateMockData";
@@ -123,7 +124,7 @@ export default function DashboardClient() {
 			case "dashboard":
 				return <HomeComponent />;
 			case "items":
-				return <div>Items Component (to be implemented)</div>;
+				return <ItemsComponent />;
 			case "categories":
 				return <div>Categories Component (to be implemented)</div>;
 			case "suppliers":
@@ -228,8 +229,8 @@ export default function DashboardClient() {
 								<div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
 									<User className="h-5 w-5 text-gray-500" />
 								</div>
-								<span className="ml-2 text-sm font-medium text-gray-700">
-									Admin
+								<span className="ml-2 text-sm font-semibold text-gray-700">
+									admin
 								</span>
 							</div>
 							<button

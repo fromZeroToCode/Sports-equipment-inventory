@@ -13,6 +13,8 @@ body {
 }
 
 button,
-a {
+a,
+option,
+select {
 	@apply cursor-pointer;
 }
