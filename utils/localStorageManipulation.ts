@@ -1,4 +1,4 @@
-import { toastError } from "@/composables/toast";
+import { toastError } from "@/hooks/useToast";
 
 //utility functions to handle localStorage operations with error handling
 const KEYS = {

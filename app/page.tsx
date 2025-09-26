@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { toastError, toastSuccess } from "@/composables/toast";
+import { toastError, toastSuccess } from "@/hooks/useToast";
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionRedirectToDashboard } from "@/hooks/useSessionRedirect";

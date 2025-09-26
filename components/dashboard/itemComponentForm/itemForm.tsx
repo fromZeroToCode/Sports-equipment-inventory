@@ -8,8 +8,10 @@ import {
 	updateItem,
 	getCategories,
 	getSuppliers,
+	getCurrency,
 } from "@/utils/manipulateData";
 import { Category, Supplier, Item } from "@/utils/types";
+import { toastError } from "@/hooks/useToast";
 
 export default function ItemForm({
 	itemId,
@@ -20,6 +22,7 @@ export default function ItemForm({
 	onClose?: () => void;
 	onSave?: (item: Item) => void;
 }) {
+	const currency = getCurrency();
 	const router = useRouter();
 	const params = useSearchParams();
 	const idFromParams = params?.get("id") ?? "";
@@ -87,7 +90,7 @@ export default function ItemForm({
 		if (isEditing && id) {
 			const existing = getItem(id);
 			if (!existing) {
-				alert("Item not found");
+				toastError("Error", "Item not found for editing.");
 				return;
 			}
 			const updated: Item = {
@@ -298,7 +301,7 @@ export default function ItemForm({
 								htmlFor="price"
 								className="block text-sm font-medium text-gray-700"
 							>
-								Price ($)
+								Price ({currency})
 							</label>
 							<input
 								type="number"

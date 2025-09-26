@@ -6,7 +6,7 @@ import {
 	saveToStorage,
 	KEYS,
 } from "@/utils/localStorageManipulation";
-import { toastError, toastSuccess } from "@/composables/toast";
+import { toastError, toastSuccess } from "@/hooks/useToast";
 
 export const initializeData = () => {
 	// First check if localStorage is available
@@ -36,6 +36,12 @@ export const getSuppliers = (): Supplier[] => {
 };
 export const getItems = (): Item[] => {
 	return getFromStorage<Item[]>(KEYS.inventory, []);
+};
+export const getSettings = (): Settings => {
+	return getFromStorage<Settings>(KEYS.settings, {
+		lowStockThreshold: 5,
+		currency: "PHP",
+	});
 };
 export const getItem = (id: string): Item | undefined => {
 	const items = getItems();
@@ -156,4 +162,16 @@ export const getSupplierName = (supplierId: string): string => {
 	const suppliers = getSuppliers();
 	const supplier = suppliers.find((s) => s.id === supplierId);
 	return supplier ? supplier.name : "Other";
+};
+
+export const getCurrency = (): string => {
+	const settings = getSettings();
+	if (settings.currency === "PHP") return "₱";
+	if (settings.currency === "USD") return "$";
+	if (settings.currency === "EUR") return "€";
+	if (settings.currency === "CAD") return "$";
+	if (settings.currency === "GBP") return "£";
+	if (settings.currency === "AUD") return "$";
+
+	return settings.currency || "PHP";
 };

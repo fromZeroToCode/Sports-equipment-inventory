@@ -1,5 +1,5 @@
 "use client";
-import { useLoading } from "@/composables/LoadingManager";
+import { useLoading } from "@/hooks/useLoadingManager";
 import { HashLoader } from "react-spinners";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -24,7 +24,10 @@ export const GlobalLoading = () => {
 						<div className="flex flex-col items-center gap-4">
 							<HashLoader
 								color={
-									typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+									typeof window !== "undefined" &&
+									document.documentElement.classList.contains(
+										"dark"
+									)
 										? "#fb7c37"
 										: "#fb923c"
 								}

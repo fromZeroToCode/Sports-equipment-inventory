@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Plus, Search, Edit, Trash, Filter } from "lucide-react";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 import { Item, Category, Supplier } from "@/utils/types";
 import {
@@ -8,11 +9,14 @@ import {
 	getCategories,
 	getSuppliers,
 	deleteItem,
+	getCurrency,
 } from "@/utils/manipulateData";
 import ItemForm from "./itemComponentForm/itemForm";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function ItemsComponent() {
+	const currency = getCurrency();
+	const confirm = useConfirm();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isAddMode = searchParams?.get("mode") === "add";
@@ -174,12 +178,18 @@ export default function ItemsComponent() {
 		}
 	};
 
-	const handleDelete = (id: string) => {
-		if (window.confirm("Delete this item?")) {
-			deleteItem(id);
-			const updated = getItems();
-			setItems(sortByCreated(updated));
-		}
+	const handleDelete = async (id: string) => {
+		const ok = await confirm({
+			title: "Delete Item",
+			description:
+				"Are you sure you want to delete this item? This cannot be undone.",
+			confirmText: "Delete",
+			cancelText: "Cancel",
+		});
+		if (!ok) return;
+		deleteItem(id);
+		const updated = getItems();
+		setItems(sortByCreated(updated));
 	};
 
 	return (
@@ -366,7 +376,8 @@ export default function ItemsComponent() {
 												{item.name}
 											</div>
 											<div className="text-sm text-gray-500">
-												${item.price.toFixed(2)}
+												{currency +
+													item.price.toFixed(2)}
 											</div>
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

@@ -4,8 +4,10 @@ import { Plus, Edit, Trash, Search } from "lucide-react";
 
 import { getSuppliers, deleteSupplier } from "@/utils/manipulateData";
 import SupplierForm from "@/components/dashboard/supplierComponentForm/supplierForm";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 export default function SupplierComponent() {
+	const confirm = useConfirm();
 	const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 	const [filteredSuppliers, setFilteredSuppliers] = useState<Supplier[]>([]);
 
@@ -34,11 +36,18 @@ export default function SupplierComponent() {
 	};
 
 	// Handle delete supplier
-	const handleDelete = (id: string) => {
-		if (window.confirm("Are you sure you want to delete this supplier?")) {
-			deleteSupplier(id);
-			loadSuppliers();
-		}
+	const handleDelete = async (id: string) => {
+		const ok = await confirm({
+			title: "Delete Supplier",
+			description:
+				"Are you sure you want to delete this supplier? This cannot be undone.",
+			confirmText: "Delete",
+			cancelText: "Cancel",
+		});
+		if (!ok) return;
+
+		deleteSupplier(id);
+		loadSuppliers();
 	};
 
 	const loadSuppliers = () => {

@@ -13,7 +13,7 @@ import {
 	Settings,
 } from "lucide-react";
 import { logoutUser } from "@/lib/dashboard";
-import { toastError, toastSuccess } from "@/composables/toast";
+import { toastError, toastSuccess } from "@/hooks/useToast";
 import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
 
 import HomeComponent from "@/components/dashboard/homeComponent";
@@ -21,6 +21,7 @@ import ItemsComponent from "@/components/dashboard/itemsComponent";
 import CategoriesComponent from "@/components/dashboard/categoriesComponent";
 import SupplierComponent from "@/components/dashboard/supplierComponent";
 import ReportsComponent from "@/components/dashboard/reportsComponent";
+import SettingsComponent from "@/components/dashboard/settingsComponent";
 
 import { clearAllData } from "@/utils/localStorageManipulation";
 
@@ -137,7 +138,7 @@ export default function DashboardClient() {
 			case "reports":
 				return <ReportsComponent />;
 			case "settings":
-				return <div>Settings Component (to be implemented)</div>;
+				return <SettingsComponent />;
 			default:
 				return <HomeComponent />;
 		}
@@ -149,7 +150,10 @@ export default function DashboardClient() {
 			typeof window === "undefined" ||
 			typeof localStorage === "undefined"
 		) {
-			alert("Mock data generation must run in a browser environment");
+			toastError(
+				"Error",
+				"Cannot generate mock data: localStorage is not available."
+			);
 			return;
 		}
 

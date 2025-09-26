@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Item } from "@/utils/types";
 import { Download, FileText } from "lucide-react";
-import {
-	getItems,
-	getCategories,
-	getSuppliers,
-	getCategoryName,
-} from "@/utils/manipulateData";
+import { getItems, getCategoryName, getCurrency } from "@/utils/manipulateData";
 
 import {
 	BarChart,
@@ -20,6 +15,7 @@ import {
 } from "recharts";
 
 export default function ReportsComponent() {
+	const currency = getCurrency();
 	const [items, setItems] = useState<Item[]>([]);
 	const [totalValue, setTotalValue] = useState(0);
 	const [categoryData, setCategoryData] = useState<any[]>([]);
@@ -153,7 +149,7 @@ export default function ReportsComponent() {
 								Total Inventory Value
 							</p>
 							<p className="mt-1 text-3xl font-semibold text-gray-900">
-								${totalValue.toFixed(2)}
+								{currency + totalValue.toFixed(2)}
 							</p>
 						</div>
 					</div>
@@ -208,7 +204,7 @@ export default function ReportsComponent() {
 								<Legend />
 								<Bar
 									dataKey="value"
-									name="Value ($)"
+									name={`Value (${currency})`}
 									fill="#3b82f6"
 								/>
 							</BarChart>
@@ -304,10 +300,10 @@ export default function ReportsComponent() {
 											{item.quantity}
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											${item.price.toFixed(2)}
+											{currency + item.price.toFixed(2)}
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-											$
+											{currency}
 											{(
 												item.price * item.quantity
 											).toFixed(2)}

@@ -1,9 +1,9 @@
 import "./globals.css";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { LoadingProvider } from "@/composables/LoadingManager";
+import { LoadingProvider } from "@/hooks/useLoadingManager";
 import { GlobalLoading } from "@/components/GlobalLoader";
-import { icons } from "lucide-react";
+import { ConfirmProvider } from "@/components/ui/ConfirmProvider";
 
 export const metadata = {
 	title: "Sports Equipment Inventory",
@@ -19,10 +19,12 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning={true}>
 			<link rel="icon" type="image/png" href="/icon.png" />
 			<body className="bg-slate-50 dark:bg-black ">
-				<LoadingProvider>
-					{children}
-					<GlobalLoading />
-				</LoadingProvider>
+				<ConfirmProvider>
+					<LoadingProvider>
+						{children}
+						<GlobalLoading />
+					</LoadingProvider>
+				</ConfirmProvider>
 
 				<ToastContainer
 					position="bottom-right"
