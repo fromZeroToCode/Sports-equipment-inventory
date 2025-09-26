@@ -317,125 +317,102 @@ export default function ItemsComponent() {
 					</div>
 				</div>
 			</div>
+
 			{/* Items Table */}
-			<div className="bg-white shadow rounded-lg overflow-hidden">
-				<div className="overflow-x-auto">
-					<table className="min-w-full divide-y divide-gray-200">
-						<thead className="bg-gray-50">
-							<tr>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Item Name
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Category
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Quantity
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Location
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Supplier
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Status
-								</th>
-								<th
-									scope="col"
-									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
-									Actions
-								</th>
-							</tr>
-						</thead>
-						<tbody className="bg-white divide-y divide-gray-200">
-							{pagedItems.length > 0 ? (
-								pagedItems.map((item) => (
-									<tr key={item.id}>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<div className="text-sm font-medium text-gray-900">
-												{item.name}
-											</div>
-											<div className="text-sm text-gray-500">
-												{currency +
-													item.price.toFixed(2)}
-											</div>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{getCategoryName(item.categoryId)}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{item.quantity}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{item.location}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{getSupplierName(item.supplierId)}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<span
-												className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
-													item.status
-												)}`}
+			<div className="bg-white shadow rounded-lg overflow-auto">
+				<table className="min-w-full table-fixed text-sm whitespace-nowrap">
+					<thead className="bg-gray-50">
+						<tr>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Item Name
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Category
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Quantity
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Location
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Supplier
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Status
+							</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Actions
+							</th>
+						</tr>
+					</thead>
+					<tbody className="bg-white divide-y divide-gray-200">
+						{pagedItems.length > 0 ? (
+							pagedItems.map((item) => (
+								<tr key={item.id}>
+									<td className="px-6 py-4 ">
+										<div className="text-sm font-medium text-gray-900">
+											{item.name}
+										</div>
+										<div className="text-sm text-gray-500">
+											{currency + item.price.toFixed(2)}
+										</div>
+									</td>
+									<td className="px-6 py-4  text-sm text-gray-500">
+										{getCategoryName(item.categoryId)}
+									</td>
+									<td className="px-6 py-4  text-sm text-gray-500">
+										{item.quantity}
+									</td>
+									<td className="px-6 py-4  text-sm text-gray-500">
+										{item.location}
+									</td>
+									<td className="px-6 py-4  text-sm text-gray-500">
+										{getSupplierName(item.supplierId)}
+									</td>
+									<td className="px-6 py-4 ">
+										<span
+											className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
+												item.status
+											)}`}
+										>
+											{item.status}
+										</span>
+									</td>
+									<td className="px-6 py-4  text-sm font-medium">
+										<div className="flex space-x-2">
+											<button
+												onClick={() =>
+													openEdit(item.id)
+												}
+												className="text-blue-600 hover:text-blue-900"
 											>
-												{item.status}
-											</span>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-											<div className="flex space-x-2">
-												<button
-													onClick={() =>
-														openEdit(item.id)
-													}
-													className="text-blue-600 hover:text-blue-900"
-												>
-													<Edit className="h-5 w-5" />
-												</button>
-												<button
-													onClick={() =>
-														handleDelete(item.id)
-													}
-													className="text-red-600 hover:text-red-900"
-												>
-													<Trash className="h-5 w-5" />
-												</button>
-											</div>
-										</td>
-									</tr>
-								))
-							) : (
-								<tr>
-									<td
-										colSpan={7}
-										className="px-6 py-4 text-center text-sm text-gray-500"
-									>
-										No items found
+												<Edit className="h-5 w-5" />
+											</button>
+											<button
+												onClick={() =>
+													handleDelete(item.id)
+												}
+												className="text-red-600 hover:text-red-900"
+											>
+												<Trash className="h-5 w-5" />
+											</button>
+										</div>
 									</td>
 								</tr>
-							)}
-						</tbody>
-					</table>
-				</div>
+							))
+						) : (
+							<tr>
+								<td
+									colSpan={7}
+									className="px-6 py-4 text-center text-sm text-gray-500"
+								>
+									No items found
+								</td>
+							</tr>
+						)}
+					</tbody>
+				</table>
 
 				{/* Pagination controls */}
 				<div className="px-4 py-3 bg-white border-t border-gray-200 flex items-center justify-between">
@@ -465,7 +442,6 @@ export default function ItemsComponent() {
 							Previous
 						</button>
 
-						{/* simple page indicator */}
 						<div className="text-sm text-gray-700">
 							Page <span className="font-medium">{page}</span> of{" "}
 							<span className="font-medium">{totalPages}</span>

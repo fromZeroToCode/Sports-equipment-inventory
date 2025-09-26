@@ -125,7 +125,7 @@ export default function SettingsComponent() {
 			</div>
 
 			{/* System Settings Card */}
-			<div className="bg-white shadow rounded-lg overflow-hidden">
+			<div className="bg-white shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200">
 					<h3 className="text-lg font-medium text-gray-900">
 						System Settings
@@ -207,7 +207,7 @@ export default function SettingsComponent() {
 			</div>
 
 			{/* Data Management Card */}
-			<div className="bg-white shadow rounded-lg overflow-hidden">
+			<div className="bg-white shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
 					<h3 className="text-lg font-medium text-gray-900">
 						Data Management

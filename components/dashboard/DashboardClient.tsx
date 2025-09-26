@@ -171,10 +171,18 @@ export default function DashboardClient() {
 					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
-				<div className="flex items-center h-16 px-4 bg-blue-600">
+				<div className="flex items-center h-16 px-4 bg-blue-600 justify-between">
 					<h1 className="text-xl font-bold text-white">
 						Sports Inventory
 					</h1>
+					<button
+						type="button"
+						className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+						onClick={onMenuClick}
+					>
+						<span className="sr-only">Open sidebar</span>
+						<Menu className="h-6 w-6" aria-hidden="true" />
+					</button>
 				</div>
 
 				<div className="flex-1 flex flex-col overflow-y-auto">
@@ -253,8 +261,14 @@ export default function DashboardClient() {
 					</div>
 				</header>
 
-				<main className="p-6 overflow-auto">{renderActiveTab()}</main>
+				<main className="p-6 overflow-auto w-full max-[445px]:p-4">
+					{renderActiveTab()}
+				</main>
 			</div>
+
+			{sidebarOpen && (
+				<div className="lg:hidden fixed inset-0 bg-gray-800/50 w-screen h-screen z-20"></div>
+			)}
 
 			{/* button for generating data */}
 			<button

@@ -33,9 +33,9 @@ export default function HomeComponent() {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center max-[436px]:flex-col max-[436px]:items-start">
 				<h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-				<div className="flex space-x-2">
+				<div className="flex space-x-2 max-[436px]:mt-4">
 					<button
 						onClick={addNewItem}
 						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all duration-150"

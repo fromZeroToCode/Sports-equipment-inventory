@@ -50,8 +50,8 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 					No recent items
 				</div>
 			) : (
-				<div className="overflow-auto ">
-					<table className="min-w-full table-fixed text-sm ">
+				<div className="overflow-auto">
+					<table className="min-w-full table-fixed text-sm whitespace-nowrap">
 						<thead className="bg-gray-50">
 							<tr>
 								<th className="px-4 py-2 text-left text-xs font-medium text-gray-500">

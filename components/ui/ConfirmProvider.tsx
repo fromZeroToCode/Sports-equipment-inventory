@@ -37,7 +37,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 			{children}
 			{open && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-					<div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
+					<div className="w-full max-w-md bg-white rounded-lg shadow-lg ">
 						<div className="px-6 py-4 border-b border-gray-200">
 							<h3 className="text-lg font-medium text-gray-900">
 								{opts.title ?? "Confirm"}

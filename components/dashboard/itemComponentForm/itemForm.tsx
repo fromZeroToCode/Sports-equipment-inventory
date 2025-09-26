@@ -160,7 +160,7 @@ export default function ItemForm({
 					</h1>
 				</div>
 			</div>
-			<div className="bg-white rounded-lg overflow-hidden">
+			<div className="bg-white rounded-lg ">
 				<form onSubmit={handleSubmit} className=" space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{/* Item Name */}

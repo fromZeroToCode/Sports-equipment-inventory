@@ -122,7 +122,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 									>
 										{it.quantity} left
 									</div>
-									<div className="w-24 h-2 rounded-full bg-gray-100 mt-2 overflow-hidden">
+									<div className="w-24 h-2 rounded-full bg-gray-100 mt-2 ">
 										<div
 											style={{
 												width: `${Math.min(
@@ -153,7 +153,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 
 					{/* Pagination controls */}
 					{totalPages > 1 && (
-						<div className="mt-4 flex items-center justify-between text-sm text-gray-700">
+						<div className="mt-4 flex items-center justify-between text-sm text-gray-700 max-[445px]:flex-col max-[445px]:space-y-2">
 							<div>
 								Showing{" "}
 								<span className="font-medium">
