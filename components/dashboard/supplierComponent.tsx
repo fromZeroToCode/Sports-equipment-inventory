@@ -78,12 +78,12 @@ export default function SupplierComponent() {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center max-md:flex-col max-md:items-start gap-3 w-full">
 				<h1 className="text-2xl font-bold text-gray-800">Suppliers</h1>
 
-				<div className="flex space-x-2">
-					<div className="relative">
-						<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+				<div className="flex items-center gap-3 max-md:w-full max-sm:flex-col sm:flex-row sm:w-auto">
+					<div className="relative max-md:w-full">
+						<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ">
 							<Search className="h-5 w-5 text-gray-400" />
 						</div>
 						<input
@@ -92,13 +92,13 @@ export default function SupplierComponent() {
 							placeholder="Search suppliers..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							className="pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
+							className="pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm w-full"
 						/>
 					</div>
 
 					<button
 						onClick={() => setIsFormOpen(true)}
-						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 whitespace-nowrap"
 					>
 						<Plus className="h-4 w-4 mr-1" />
 						Add Supplier
@@ -119,96 +119,100 @@ export default function SupplierComponent() {
 
 			{/* Suppliers List */}
 			<div className="bg-white shadow rounded-lg ">
-				<table className="min-w-full divide-y divide-gray-200">
-					<thead className="bg-gray-50">
-						<tr>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
-								Name
-							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
-								Contact
-							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
-								Email
-							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
-								Phone
-							</th>
-							<th
-								scope="col"
-								className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-							>
-								Actions
-							</th>
-						</tr>
-					</thead>
-					<tbody className="bg-white divide-y divide-gray-200">
-						{pagedSuppliers.length > 0 ? (
-							pagedSuppliers.map((supplier) => (
-								<tr key={supplier.id}>
-									<td className="px-6 py-4 whitespace-nowrap">
-										<div className="text-sm font-medium text-gray-900">
-											{supplier.name}
-										</div>
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{supplier.contact}
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{supplier.email}
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{supplier.phone}
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-										<div className="flex justify-end space-x-2">
-											<button
-												onClick={() =>
-													handleEdit(supplier)
-												}
-												className="text-blue-600 hover:text-blue-900"
-											>
-												<Edit className="h-5 w-5" />
-											</button>
-											<button
-												onClick={() =>
-													handleDelete(supplier.id)
-												}
-												className="text-red-600 hover:text-red-900"
-											>
-												<Trash className="h-5 w-5" />
-											</button>
-										</div>
+				<div className="overflow-x-auto">
+					<table className="min-w-full table-fixed divide-y divide-gray-200">
+						<thead className="bg-gray-50">
+							<tr>
+								<th
+									scope="col"
+									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								>
+									Name
+								</th>
+								<th
+									scope="col"
+									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								>
+									Contact
+								</th>
+								<th
+									scope="col"
+									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								>
+									Email
+								</th>
+								<th
+									scope="col"
+									className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								>
+									Phone
+								</th>
+								<th
+									scope="col"
+									className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+								>
+									Actions
+								</th>
+							</tr>
+						</thead>
+						<tbody className="bg-white divide-y divide-gray-200">
+							{pagedSuppliers.length > 0 ? (
+								pagedSuppliers.map((supplier) => (
+									<tr key={supplier.id}>
+										<td className="px-6 py-4 whitespace-nowrap">
+											<div className="text-sm font-medium text-gray-900">
+												{supplier.name}
+											</div>
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{supplier.contact}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{supplier.email}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{supplier.phone}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+											<div className="flex justify-end space-x-2">
+												<button
+													onClick={() =>
+														handleEdit(supplier)
+													}
+													className="text-blue-600 hover:text-blue-900"
+												>
+													<Edit className="h-5 w-5" />
+												</button>
+												<button
+													onClick={() =>
+														handleDelete(
+															supplier.id
+														)
+													}
+													className="text-red-600 hover:text-red-900"
+												>
+													<Trash className="h-5 w-5" />
+												</button>
+											</div>
+										</td>
+									</tr>
+								))
+							) : (
+								<tr>
+									<td
+										colSpan={5}
+										className="px-6 py-4 text-center text-sm text-gray-500"
+									>
+										No suppliers found
 									</td>
 								</tr>
-							))
-						) : (
-							<tr>
-								<td
-									colSpan={5}
-									className="px-6 py-4 text-center text-sm text-gray-500"
-								>
-									No suppliers found
-								</td>
-							</tr>
-						)}
-					</tbody>
-				</table>
+							)}
+						</tbody>
+					</table>
+				</div>
 
 				{/* pagination controls */}
-				<div className="px-4 py-3 bg-white border-t border-gray-200 flex items-center justify-between">
+				<div className="px-4 py-3 bg-white border-t border-gray-200 flex items-center justify-between max-sm:flex-col gap-3">
 					<div className="text-sm text-gray-700">
 						Showing{" "}
 						<span className="font-medium">

@@ -224,7 +224,7 @@ export default function DashboardClient() {
 			</aside>
 
 			{/* Main content area */}
-			<div className="flex-1 flex flex-col lg:pl-64">
+			<div className="flex-1 flex flex-col lg:pl-64 w-full ">
 				{/* header */}
 				<header className="bg-white shadow-sm z-10">
 					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
