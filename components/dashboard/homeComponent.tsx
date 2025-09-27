@@ -43,7 +43,12 @@ export default function HomeComponent() {
 						<Plus className="h-4 w-4 mr-1" />
 						Add Item
 					</button>
-					<button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 transition-all duration-150">
+					<button
+						onClick={() =>
+							router.replace("/dashboard/?tab=reports")
+						}
+						className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 transition-all duration-150"
+					>
 						<List className="h-4 w-4 mr-1" />
 						View Reports
 					</button>

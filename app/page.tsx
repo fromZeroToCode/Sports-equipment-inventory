@@ -111,7 +111,7 @@ export default function login() {
 						<Lock className="text-white" size={24} />
 					</div>
 					<h1 className="text-3xl font-bold text-gray-800">
-						Sports Inventory
+						GearSync
 					</h1>
 					<p className="text-gray-600 mt-2">
 						Sign in to manage your inventory
@@ -238,7 +238,7 @@ export default function login() {
 
 				<div className="mt-6 text-center">
 					<p className="text-sm text-gray-600">
-						Sports Inventory App &copy; 2025. All rights reserved.
+						GearSync App &copy; 2025. All rights reserved.
 					</p>
 				</div>
 			</div>

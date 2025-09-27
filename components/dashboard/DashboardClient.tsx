@@ -173,7 +173,7 @@ export default function DashboardClient() {
 			>
 				<div className="flex items-center h-16 px-4 bg-blue-600 justify-between">
 					<h1 className="text-xl font-bold text-white">
-						Sports Inventory
+						GearSync
 					</h1>
 					<button
 						type="button"
