@@ -73,6 +73,10 @@ export const updateItem = (item: Item): void => {
 	const updatedItems = items.map((i) =>
 		i.id === item.id ? { ...item, updated_at: new Date().toISOString() } : i
 	);
+	toastSuccess(
+		"Item updated successfully",
+		"The item has been updated in the inventory."
+	);
 	saveToStorage(KEYS.inventory, updatedItems);
 };
 
