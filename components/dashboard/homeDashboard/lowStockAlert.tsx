@@ -61,7 +61,9 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 					</div>
 				</div>
 				<button
-					onClick={() => router.replace("/dashboard/?tab=items")}
+					onClick={() =>
+						router.replace("/dashboard/?tab=items&filter=low-stock")
+					}
 					className="text-sm text-blue-600 hover:underline"
 				>
 					View all

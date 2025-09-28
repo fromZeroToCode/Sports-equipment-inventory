@@ -21,6 +21,7 @@ export default function ItemsComponent() {
 	const searchParams = useSearchParams();
 	const isAddMode = searchParams?.get("mode") === "add";
 	const searchedItems = searchParams?.get("search") || "";
+	const lowStockFilter = searchParams?.get("filter") === "low-stock";
 	const [items, setItems] = useState<Item[]>([]);
 	const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -68,6 +69,10 @@ export default function ItemsComponent() {
 		}
 		if (searchedItems) {
 			setSearchTerm(searchedItems);
+			setPage(1);
+		}
+		if (lowStockFilter) {
+			setStockFilter("Low Stock");
 			setPage(1);
 		}
 		router.replace("/dashboard/?tab=items");
