@@ -217,7 +217,7 @@ export default function ItemForm({
 								Quantity
 							</label>
 							<input
-								type="number"
+								type="text"
 								id="quantity"
 								value={quantity}
 								onChange={(e) =>
@@ -304,7 +304,7 @@ export default function ItemForm({
 								Price ({currency})
 							</label>
 							<input
-								type="number"
+								type="text"
 								id="price"
 								value={price}
 								onChange={(e) =>
