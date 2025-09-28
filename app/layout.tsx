@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { LoadingProvider } from "@/hooks/useLoadingManager";
 import { GlobalLoading } from "@/components/GlobalLoader";
 import { ConfirmProvider } from "@/components/ui/ConfirmProvider";
+import ThemeProvider from "@/hooks/useThemeProvider";
 
 export const metadata = {
 	title: "Sports Equipment Inventory",
@@ -21,7 +22,7 @@ export default function RootLayout({
 			<body className="bg-slate-50 dark:bg-black ">
 				<ConfirmProvider>
 					<LoadingProvider>
-						{children}
+						<ThemeProvider>{children}</ThemeProvider>
 						<GlobalLoading />
 					</LoadingProvider>
 				</ConfirmProvider>

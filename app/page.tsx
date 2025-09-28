@@ -5,6 +5,7 @@ import { toastError, toastSuccess } from "@/hooks/useToast";
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionRedirectToDashboard } from "@/hooks/useSessionRedirect";
+import DarkModeButton from "@/components/ui/DarkModeButton";
 
 import { loginUser } from "@/lib/auth";
 
@@ -104,16 +105,20 @@ export default function login() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-			<div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
+		<div className="min-h-screen flex items-center justify-center  bg-indigo-50 dark:bg-gray-900 relative">
+			<div className="absolute top-4 right-4">
+				<DarkModeButton />
+			</div>
+
+			<div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200 dark:border-gray-700">
 				<div className="text-center mb-8">
 					<div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
 						<Lock className="text-white" size={24} />
 					</div>
-					<h1 className="text-3xl font-bold text-gray-800">
+					<h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100	">
 						GearSync
 					</h1>
-					<p className="text-gray-600 mt-2">
+					<p className="text-gray-600 dark:text-gray-400 mt-2">
 						Sign in to manage your inventory
 					</p>
 				</div>
@@ -123,7 +128,7 @@ export default function login() {
 					{/* username field */}
 					<div>
 						<label
-							className="block text-gray-700 text-sm font-medium mb-2"
+							className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2"
 							htmlFor="username"
 						>
 							Username
@@ -133,7 +138,7 @@ export default function login() {
 								id="username"
 								placeholder="Enter your username"
 								type="text"
-								className={`w-full pr-3 pl-11 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+								className={`w-full pr-3 pl-11 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors dark:text-gray-200 dark:border-gray-700 ${
 									errors.username
 										? "border-red-300 focus:ring-red-500"
 										: "border-gray-300 focus:ring-blue-500"
@@ -166,7 +171,7 @@ export default function login() {
 					{/* password field */}
 					<div>
 						<label
-							className="block text-gray-700 text-sm font-medium mb-2"
+							className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2"
 							htmlFor="password"
 						>
 							Password
@@ -176,7 +181,7 @@ export default function login() {
 								id="password"
 								placeholder="Enter your password"
 								type={showPassword ? "text" : "password"}
-								className={`w-full pr-12 pl-11 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+								className={`w-full pr-12 pl-11 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors dark:text-gray-200 dark:border-gray-700 ${
 									errors.password
 										? "border-red-300 focus:ring-red-500"
 										: "border-gray-300 focus:ring-blue-500"
@@ -237,7 +242,7 @@ export default function login() {
 				</form>
 
 				<div className="mt-6 text-center">
-					<p className="text-sm text-gray-600">
+					<p className="text-sm text-gray-600 dark:text-gray-400">
 						GearSync App &copy; 2025. All rights reserved.
 					</p>
 				</div>

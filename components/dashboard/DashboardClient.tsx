@@ -162,19 +162,17 @@ export default function DashboardClient() {
 	};
 
 	return (
-		<div className="flex h-screen bg-gray-100">
+		<div className="flex h-screen bg-gray-100 dark:bg-gray-900">
 			{/* Sidebar */}
 			<aside
-				className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 transform z-30 transition-transform duration-200 ease-in-out
+				className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 transform z-30 transition-transform duration-200 ease-in-out
                     ${
 						sidebarOpen ? "translate-x-0" : "-translate-x-full"
 					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
 				<div className="flex items-center h-16 px-4 bg-blue-600 justify-between">
-					<h1 className="text-xl font-bold text-white">
-						GearSync
-					</h1>
+					<h1 className="text-xl font-bold text-white">GearSync</h1>
 					<button
 						type="button"
 						className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
@@ -226,7 +224,7 @@ export default function DashboardClient() {
 			{/* Main content area */}
 			<div className="flex-1 flex flex-col lg:pl-64 w-full ">
 				{/* header */}
-				<header className="bg-white shadow-sm z-10">
+				<header className="bg-white shadow-sm z-10 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
 					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
 						<button
 							type="button"
