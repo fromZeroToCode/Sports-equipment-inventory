@@ -20,6 +20,13 @@ export default function SettingsComponent() {
 				const settings = localStorage.getItem("settings");
 				if (settings) {
 					const parsedSettings = JSON.parse(settings);
+					if (parsedSettings.lowStockThreshold === 0) {
+						parsedSettings.lowStockThreshold = 1;
+						localStorage.setItem(
+							"settings",
+							JSON.stringify(parsedSettings)
+						);
+					}
 					setLowStockThreshold(parsedSettings.lowStockThreshold ?? 5);
 					setCurrency(parsedSettings.currency ?? "PHP");
 				}
@@ -34,6 +41,15 @@ export default function SettingsComponent() {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+
+		if (lowStockThreshold <= 0) {
+			toastError(
+				"Invalid Input",
+				"Low Stock Threshold must be at least 1."
+			);
+			return;
+		}
+
 		if (!isLocalStorageAvailable()) {
 			toastError("Error", "Cannot save: localStorage is not available.");
 			return;
@@ -52,6 +68,13 @@ export default function SettingsComponent() {
 			toastError("Error", "Failed to save settings. Please try again.");
 		}
 	};
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		if (lowStockThreshold === 0) {
+			setLowStockThreshold(1);
+		}
+	}, [lowStockThreshold]);
 
 	const handleResetData = async () => {
 		const ok = await confirm({
@@ -252,15 +275,15 @@ export default function SettingsComponent() {
 							</label>
 							<div className="mt-1 relative rounded-md shadow-sm">
 								<input
-									type="number"
+									type="text"
 									id="lowStockThreshold"
 									value={lowStockThreshold}
 									onChange={(e) =>
 										setLowStockThreshold(
-											parseInt(e.target.value) || 0
+											parseInt(e.target.value) || 1
 										)
 									}
-									min={0}
+									min={1}
 									className="block w-full pr-12 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								/>
 								<div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
