@@ -18,7 +18,11 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
-			<link rel="icon" type="image/png" href="/icon.png" />
+			<link
+				rel="icon"
+				type="image/x-icon"
+				href="/Sports-equipment-inventory/logo.svg"
+			/>
 			<body className="bg-slate-50 dark:bg-black ">
 				<ConfirmProvider>
 					<LoadingProvider>

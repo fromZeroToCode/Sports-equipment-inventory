@@ -87,6 +87,22 @@ export default function ItemForm({
 
 		const status = computeStatus(Number(quantity));
 
+		if (price <= 0) {
+			toastError(
+				"Price Cannot be 0 or Negative",
+				"Please make sure to enter a valid price greater than zero."
+			);
+			return;
+		}
+
+		if (quantity < 0) {
+			toastError(
+				"Quantity Cannot be Negative",
+				"Please make sure to enter a valid quantity greater than or equal to zero."
+			);
+			return;
+		}
+
 		if (isEditing && id) {
 			const existing = getItem(id);
 			if (!existing) {
@@ -135,13 +151,13 @@ export default function ItemForm({
 	};
 
 	return (
-		<div className="space-y-6 bg-white rounded-lg p-6 shadow ">
+		<div className="space-y-6 bg-white dark:bg-gray-800 rounded-lg p-6 shadow ">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center">
 					{onClose ? (
 						<button
 							onClick={() => finish()}
-							className="mr-4 p-2 text-gray-500 rounded-full hover:bg-gray-100"
+							className="mr-4 p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
 							type="button"
 						>
 							<ArrowLeft className="h-5 w-5" />
@@ -149,25 +165,25 @@ export default function ItemForm({
 					) : (
 						<button
 							onClick={() => router.push("/items")}
-							className="mr-4 p-2 text-gray-500 rounded-full hover:bg-gray-100"
+							className="mr-4 p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
 							type="button"
 						>
 							<ArrowLeft className="h-5 w-5" />
 						</button>
 					)}
-					<h1 className="text-2xl font-bold text-gray-800">
+					<h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
 						{isEditing ? "Edit Item" : "Add New Item"}
 					</h1>
 				</div>
 			</div>
-			<div className="bg-white rounded-lg ">
+			<div className="bg-white dark:bg-gray-800 rounded-lg ">
 				<form onSubmit={handleSubmit} className=" space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{/* Item Name */}
 						<div>
 							<label
 								htmlFor="name"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Item Name
 							</label>
@@ -177,7 +193,7 @@ export default function ItemForm({
 								id="name"
 								value={name}
 								onChange={(e) => setName(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -185,7 +201,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="category"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Category
 							</label>
@@ -193,7 +209,7 @@ export default function ItemForm({
 								id="category"
 								value={categoryId}
 								onChange={(e) => setCategoryId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							>
 								<option value="">Select Category</option>
@@ -212,7 +228,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="quantity"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Quantity
 							</label>
@@ -224,7 +240,7 @@ export default function ItemForm({
 									setQuantity(parseInt(e.target.value) || 0)
 								}
 								min={0}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -233,7 +249,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="location"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Location
 							</label>
@@ -243,7 +259,7 @@ export default function ItemForm({
 								placeholder="e.g., Aisle 3, Shelf B"
 								value={location}
 								onChange={(e) => setLocation(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -252,7 +268,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="supplier"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Supplier
 							</label>
@@ -260,7 +276,7 @@ export default function ItemForm({
 								id="supplier"
 								value={supplierId}
 								onChange={(e) => setSupplierId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
 								required
 							>
 								<option value="">Select Supplier</option>
@@ -279,7 +295,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="purchaseDate"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Purchase Date
 							</label>
@@ -290,7 +306,7 @@ export default function ItemForm({
 								onChange={(e) =>
 									setPurchaseDate(e.target.value)
 								}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
 								required
 							/>
 						</div>
@@ -299,7 +315,7 @@ export default function ItemForm({
 						<div>
 							<label
 								htmlFor="price"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Price ({currency})
 							</label>
@@ -312,7 +328,7 @@ export default function ItemForm({
 								}
 								step="0.01"
 								min="0"
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
 								required
 							/>
 						</div>
@@ -322,13 +338,13 @@ export default function ItemForm({
 						<button
 							type="button"
 							onClick={() => finish()}
-							className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							className="bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
-							className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							<Save className="h-4 w-4 mr-1" />
 							{isEditing ? "Update" : "Save"}

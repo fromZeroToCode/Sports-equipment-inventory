@@ -50,12 +50,12 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 	const pagedItems = items.slice(startIdx, endIdx);
 
 	return (
-		<div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+		<div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/30 p-6 border border-gray-200 dark:border-gray-700">
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center gap-3">
-					<AlertTriangle className="h-5 w-5 text-yellow-500" />
+					<AlertTriangle className="h-5 w-5 text-yellow-500 dark:text-yellow-400" />
 					<div>
-						<h3 className="text-xl font-medium text-gray-800">
+						<h3 className="text-xl font-medium text-gray-800 dark:text-gray-100">
 							Low Stock Alerts
 						</h3>
 					</div>
@@ -64,19 +64,19 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 					onClick={() =>
 						router.replace("/dashboard/?tab=items&filter=low-stock")
 					}
-					className="text-sm text-blue-600 hover:underline"
+					className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
 				>
 					View all
 				</button>
 			</div>
 
 			{items.length === 0 ? (
-				<div className="py-8 text-center text-sm text-gray-500">
+				<div className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
 					No low stock items
 				</div>
 			) : (
 				<>
-					<div className="divide-y divide-gray-200">
+					<div className="divide-y divide-gray-200 dark:divide-gray-700">
 						{pagedItems.map((it) => (
 							<div
 								key={it.id}
@@ -91,21 +91,25 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 												)}`
 											)
 										}
-										className="text-sm font-medium text-gray-800 hover:underline cursor-pointer"
+										className="text-sm font-medium text-gray-800 dark:text-gray-100 hover:underline cursor-pointer"
 									>
 										{it.name}
 									</div>
-									<div className="text-xs text-gray-500">
+									<div className="text-xs text-gray-500 dark:text-gray-400">
 										{it.supplierName
 											? `${it.supplierName} • `
 											: ""}
 										{it.location ?? "—"}
 									</div>
-									<div className="text-xs text-gray-400 mt-1">
+									<div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
 										{it.updated_at
 											? `Updated ${new Date(
 													it.updated_at
-											  ).toLocaleString()}`
+											  ).toLocaleDateString(undefined, {
+													year: "numeric",
+													month: "short",
+													day: "numeric",
+											  })}`
 											: "No recent update"}
 									</div>
 								</div>
@@ -124,7 +128,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 									>
 										{it.quantity} left
 									</div>
-									<div className="w-24 h-2 rounded-full bg-gray-100 mt-2 ">
+									<div className="w-24 h-2 rounded-full bg-gray-100 dark:bg-gray-700 mt-2 ">
 										<div
 											style={{
 												width: `${Math.min(
@@ -145,7 +149,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 												)
 													? "bg-red-500"
 													: "bg-yellow-400"
-											}`}
+											} rounded-full`}
 										/>
 									</div>
 								</div>
@@ -155,7 +159,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 
 					{/* Pagination controls */}
 					{totalPages > 1 && (
-						<div className="mt-4 flex items-center justify-between text-sm text-gray-700 max-[445px]:flex-col max-[445px]:space-y-2">
+						<div className="mt-4 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300 max-[445px]:flex-col max-[445px]:space-y-2">
 							<div>
 								Showing{" "}
 								<span className="font-medium">
@@ -170,7 +174,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 										setPage((p) => Math.max(1, p - 1))
 									}
 									disabled={page === 1}
-									className="px-3 py-1 rounded-md border bg-white disabled:opacity-50"
+									className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700"
 								>
 									Previous
 								</button>
@@ -189,7 +193,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 										)
 									}
 									disabled={page === totalPages}
-									className="px-3 py-1 rounded-md border bg-white disabled:opacity-50"
+									className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700"
 								>
 									Next
 								</button>

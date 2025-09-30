@@ -16,12 +16,16 @@ import { logoutUser } from "@/lib/dashboard";
 import { toastError, toastSuccess } from "@/hooks/useToast";
 import { useSessionRedirectToLogin } from "@/hooks/useSessionRedirect";
 
+import DarkModeButton from "../ui/DarkModeButton";
+
 import HomeComponent from "@/components/dashboard/homeComponent";
 import ItemsComponent from "@/components/dashboard/itemsComponent";
 import CategoriesComponent from "@/components/dashboard/categoriesComponent";
 import SupplierComponent from "@/components/dashboard/supplierComponent";
 import ReportsComponent from "@/components/dashboard/reportsComponent";
 import SettingsComponent from "@/components/dashboard/settingsComponent";
+
+import Image from "next/image";
 
 import { clearAllData } from "@/utils/localStorageManipulation";
 
@@ -171,11 +175,22 @@ export default function DashboardClient() {
 					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
-				<div className="flex items-center h-16 px-4 bg-blue-600 justify-between">
-					<h1 className="text-xl font-bold text-white">GearSync</h1>
+				<div className="flex items-center h-16 px-4 bg-blue-600 dark:bg-blue-700 justify-between">
+					<div className="flex items-center">
+						<Image
+							src="/Sports-equipment-inventory/logo.svg"
+							alt="Logo"
+							width={58}
+							height={21}
+							className="p-4"
+						/>
+						<h1 className="text-xl font-bold text-white">
+							GearSync
+						</h1>
+					</div>
 					<button
 						type="button"
-						className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+						className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
 						onClick={onMenuClick}
 					>
 						<span className="sr-only">Open sidebar</span>
@@ -192,10 +207,10 @@ export default function DashboardClient() {
 										onClick={() =>
 											handleTabClick(item.value)
 										}
-										className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md ${
+										className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md transition-colors ${
 											activeTab === item.value
-												? "bg-blue-100"
-												: "hover:bg-gray-100 "
+												? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
+												: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
 										}`}
 									>
 										<span className="mr-3">
@@ -208,7 +223,7 @@ export default function DashboardClient() {
 							<li>
 								<button
 									onClick={handleLogout}
-									className="w-full flex items-center px-4 py-2 text-sm font-medium text-left hover:bg-gray-100 rounded-md"
+									className="w-full flex items-center px-4 py-2 text-sm font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
 								>
 									<span className="mr-3">
 										<LogOut className="h-5 w-5" />
@@ -228,29 +243,32 @@ export default function DashboardClient() {
 					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
 						<button
 							type="button"
-							className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+							className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-colors"
 							onClick={onMenuClick}
 						>
 							<span className="sr-only">Open sidebar</span>
 							<Menu className="h-6 w-6" aria-hidden="true" />
 						</button>
 
-						<h2 className="text-xl font-semibold text-gray-800 hidden lg:block">
+						<h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 hidden lg:block">
 							Sports Inventory App
 						</h2>
 
 						<div className="flex items-center">
 							<div className="flex items-center mr-4">
-								<div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-									<User className="h-5 w-5 text-gray-500" />
+								<div className="mr-4 flex items-center ">
+									<DarkModeButton />
 								</div>
-								<span className="ml-2 text-sm font-semibold text-gray-700">
+								<div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+									<User className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+								</div>
+								<span className="ml-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
 									admin
 								</span>
 							</div>
 							<button
 								onClick={handleLogout}
-								className="inline-flex items-center p-2 text-gray-500 rounded-full hover:bg-gray-100"
+								className="inline-flex items-center p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
 								aria-label="Log out"
 							>
 								<LogOut className="h-5 w-5" />
@@ -265,13 +283,13 @@ export default function DashboardClient() {
 			</div>
 
 			{sidebarOpen && (
-				<div className="lg:hidden fixed inset-0 bg-gray-800/50 w-screen h-screen z-20"></div>
+				<div className="lg:hidden fixed inset-0 bg-gray-800/50 dark:bg-gray-900/50 w-screen h-screen z-20"></div>
 			)}
 
 			{/* button for generating data */}
 			<button
 				onClick={handleGenerateMockData}
-				className="text-xs fixed bottom-4 right-4 bg-blue-600 text-white p-2 rounded-md shadow-md"
+				className="text-xs fixed bottom-4 right-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white p-2 rounded-md shadow-md transition-colors"
 			>
 				Generate Mock Data
 			</button>
@@ -281,7 +299,7 @@ export default function DashboardClient() {
 					clearAllData();
 					window.location.reload();
 				}}
-				className="text-xs fixed bottom-4 right-56 bg-blue-600 text-white p-2 rounded-md shadow-md"
+				className="text-xs fixed bottom-4 right-56 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 text-white p-2 rounded-md shadow-md transition-colors"
 			>
 				delete all data
 			</button>

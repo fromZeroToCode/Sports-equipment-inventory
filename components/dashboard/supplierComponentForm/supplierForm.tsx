@@ -55,15 +55,15 @@ export default function SupplierForm({
 		}
 	}, []);
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 !m-0">
-			<div className="w-full max-w-xl bg-white rounded-lg shadow-lg overflow-auto">
-				<div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-					<h3 className="text-lg font-medium text-gray-900">
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 !m-0 max-sm:p-0">
+			<div className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto">
+				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						{editingSupplier ? "Edit Supplier" : "Add New Supplier"}
 					</h3>
 					<button
 						onClick={onClose}
-						className="text-gray-400 hover:text-gray-500"
+						className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300"
 					>
 						<X className="h-5 w-5" />
 					</button>
@@ -73,7 +73,7 @@ export default function SupplierForm({
 						<div>
 							<label
 								htmlFor="name"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Supplier Name
 							</label>
@@ -83,14 +83,14 @@ export default function SupplierForm({
 								placeholder="Supplier Name"
 								value={name}
 								onChange={(e) => setName(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
 						<div>
 							<label
 								htmlFor="contact"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Contact Person
 							</label>
@@ -100,14 +100,14 @@ export default function SupplierForm({
 								id="contact"
 								value={contact}
 								onChange={(e) => setContact(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
 						<div>
 							<label
 								htmlFor="email"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Email
 							</label>
@@ -117,14 +117,14 @@ export default function SupplierForm({
 								id="email"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
 						<div>
 							<label
 								htmlFor="phone"
-								className="block text-sm font-medium text-gray-700"
+								className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 							>
 								Phone Number
 							</label>
@@ -134,7 +134,7 @@ export default function SupplierForm({
 								id="phone"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
 							/>
 						</div>
 					</div>
@@ -142,13 +142,13 @@ export default function SupplierForm({
 						<button
 							type="button"
 							onClick={onClose}
-							className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							className="bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
-							className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							{editingSupplier ? "Update" : "Save"}
 						</button>

@@ -45,9 +45,9 @@ export default function CategoriesForm({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 !m-0">
-			<div className="w-full max-w-xl bg-white rounded-lg shadow-lg overflow-auto">
-				<div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-					<h3 className="text-lg font-medium text-gray-900">
+			<div className="w-full max-w-xl bg-white rounded-lg shadow-lg overflow-auto dark:bg-gray-800">
+				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						{editingCategory ? "Edit Category" : "Add New Category"}
 					</h3>
 					<button
@@ -65,7 +65,7 @@ export default function CategoriesForm({
 					<div>
 						<label
 							htmlFor="category-name"
-							className="block text-sm font-medium text-gray-700"
+							className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 						>
 							Category Name
 						</label>
@@ -75,7 +75,7 @@ export default function CategoriesForm({
 							type="text"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+							className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
 							required
 							autoFocus
 						/>
@@ -83,7 +83,7 @@ export default function CategoriesForm({
 					<div>
 						<label
 							htmlFor="category-description"
-							className="block text-sm font-medium text-gray-700"
+							className="block text-sm font-medium text-gray-700 dark:text-gray-300"
 						>
 							Description
 						</label>
@@ -93,7 +93,7 @@ export default function CategoriesForm({
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
 							rows={3}
-							className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+							className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
 						/>
 					</div>
 
@@ -101,7 +101,7 @@ export default function CategoriesForm({
 						<button
 							type="button"
 							onClick={onClose}
-							className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+							className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
 						>
 							Cancel
 						</button>
