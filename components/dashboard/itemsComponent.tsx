@@ -44,6 +44,7 @@ export default function ItemsComponent() {
 	);
 
 	const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
+	const [isInitialized, setIsInitialized] = useState(false); // Add this state
 
 	const sortByCreated = (arr: Item[]) =>
 		arr.slice().sort((a, b) => {
@@ -58,11 +59,13 @@ export default function ItemsComponent() {
 		const loadedSuppliers = getSuppliers();
 
 		const sortedItems = sortByCreated(loadedItems);
+		const savedFilters = localStorage.getItem("itemsFilters");
 
 		setItems(sortedItems);
 		setFilteredItems(sortedItems);
 		setCategories(loadedCategories);
 		setSuppliers(loadedSuppliers);
+
 		if (isAddMode) {
 			setShowForm(true);
 			setEditingId(undefined);
@@ -75,8 +78,43 @@ export default function ItemsComponent() {
 			setStockFilter("Low Stock");
 			setPage(1);
 		}
+
+		if (savedFilters && !searchedItems && !lowStockFilter) {
+			const parsedFilters = JSON.parse(savedFilters);
+
+			setSearchTerm(parsedFilters.searchTerm || "");
+			setStockFilter(parsedFilters.stockFilter || "");
+			setCategoryFilter(parsedFilters.categoryFilter || "");
+			setSupplierFilter(parsedFilters.supplierFilter || "");
+			setSortOrder(parsedFilters.sortOrder || "desc");
+		}
+		setIsInitialized(true);
 		router.replace("/dashboard/?tab=items");
 	}, []);
+
+	useEffect(() => {
+		if (typeof window === "undefined" || !isInitialized) return;
+
+		try {
+			const filtersToSave = {
+				searchTerm,
+				categoryFilter,
+				supplierFilter,
+				stockFilter,
+				sortOrder,
+			};
+			localStorage.setItem("itemsFilters", JSON.stringify(filtersToSave));
+		} catch (error) {
+			console.error("Error saving filters to localStorage:", error);
+		}
+	}, [
+		searchTerm,
+		categoryFilter,
+		supplierFilter,
+		stockFilter,
+		sortOrder,
+		isInitialized,
+	]);
 
 	// re-sort when sortOrder changes
 	useEffect(() => {
@@ -314,6 +352,18 @@ export default function ItemsComponent() {
 								setCategoryFilter("");
 								setSupplierFilter("");
 								setStockFilter("");
+								setSortOrder("desc");
+
+								if (typeof window !== "undefined") {
+									try {
+										localStorage.removeItem("itemsFilters");
+									} catch (error) {
+										console.error(
+											"Error clearing saved filters:",
+											error
+										);
+									}
+								}
 							}}
 							className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-150"
 						>
