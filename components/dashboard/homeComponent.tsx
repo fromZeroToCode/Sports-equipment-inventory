@@ -11,6 +11,18 @@ export default function HomeComponent() {
 	const [totalSuppliers, setTotalSuppliers] = useState(0);
 	const [totalItems, setTotalItems] = useState(0);
 
+	const [currentRole, setCurrentRole] = useState<string>("guest");
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const parsed = raw ? JSON.parse(raw) : null;
+			setCurrentRole(parsed?.role ?? "guest");
+		} catch {
+			setCurrentRole("guest");
+		}
+	}, []);
+
 	useEffect(() => {
 		if (
 			typeof window === "undefined" ||
@@ -38,22 +50,27 @@ export default function HomeComponent() {
 					Dashboard
 				</h1>
 				<div className="flex space-x-2 max-[436px]:mt-4">
-					<button
-						onClick={addNewItem}
-						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-150"
-					>
-						<Plus className="h-4 w-4 mr-1" />
-						Add Item
-					</button>
-					<button
-						onClick={() =>
-							router.replace("/dashboard/?tab=reports")
-						}
-						className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150"
-					>
-						<List className="h-4 w-4 mr-1" />
-						View Reports
-					</button>
+					{currentRole === "admin" && (
+						<button
+							onClick={addNewItem}
+							className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-150"
+						>
+							<Plus className="h-4 w-4 mr-1" />
+							Add Item
+						</button>
+					)}
+
+					{currentRole === "admin" && (
+						<button
+							onClick={() =>
+								router.replace("/dashboard/?tab=reports")
+							}
+							className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150"
+						>
+							<List className="h-4 w-4 mr-1" />
+							View Reports
+						</button>
+					)}
 				</div>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

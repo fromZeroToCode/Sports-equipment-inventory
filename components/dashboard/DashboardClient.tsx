@@ -11,6 +11,7 @@ import {
 	Truck,
 	BarChart,
 	Settings,
+	Lock,
 } from "lucide-react";
 import { logoutUser } from "@/lib/dashboard";
 import { toastError, toastSuccess } from "@/hooks/useToast";
@@ -24,6 +25,19 @@ import CategoriesComponent from "@/components/dashboard/categoriesComponent";
 import SupplierComponent from "@/components/dashboard/supplierComponent";
 import ReportsComponent from "@/components/dashboard/reportsComponent";
 import SettingsComponent from "@/components/dashboard/settingsComponent";
+
+const ROLE_PERMISSIONS: Record<string, string[]> = {
+	admin: [
+		"dashboard",
+		"items",
+		"categories",
+		"suppliers",
+		"reports",
+		"settings",
+	],
+	staff: ["dashboard", "items", "categories", "suppliers"],
+	coach: ["dashboard", "items", "categories", "suppliers"],
+};
 
 import Image from "next/image";
 
@@ -53,6 +67,26 @@ export default function DashboardClient() {
 
 	const initialTab = searchParams?.get("tab") || "dashboard";
 	const [activeTab, setActiveTab] = useState(initialTab);
+
+	const [currentRole, setCurrentRole] = useState<string>("guest");
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const parsed = raw ? JSON.parse(raw) : null;
+			const role = parsed?.role ?? "guest";
+			setCurrentRole(role);
+
+			const allowed = ROLE_PERMISSIONS[role] ?? ["dashboard"];
+			if (!allowed.includes(initialTab)) {
+				setActiveTab("dashboard");
+				router.push("/dashboard?tab=dashboard", { scroll: false });
+			}
+		} catch {
+			setCurrentRole("guest");
+		}
+	}, []);
 
 	const navItems = [
 		{
@@ -107,6 +141,14 @@ export default function DashboardClient() {
 	};
 
 	const handleTabClick = (tab: string) => {
+		const allowed = ROLE_PERMISSIONS[currentRole] ?? ["dashboard"];
+		if (!allowed.includes(tab)) {
+			toastError("Unauthorized", "Your role cannot access this section.");
+			setActiveTab("dashboard");
+			router.push(`/dashboard?tab=dashboard`, { scroll: false });
+			return;
+		}
+
 		setActiveTab(tab);
 		if (typeof window !== "undefined") {
 			router.push(`/dashboard?tab=${tab}`, { scroll: false });
@@ -201,25 +243,43 @@ export default function DashboardClient() {
 				<div className="flex-1 flex flex-col overflow-y-auto">
 					<nav className="flex-1 px-2 py-4">
 						<ul className="space-y-1">
-							{navItems.map((item) => (
-								<li key={item.name}>
-									<button
-										onClick={() =>
-											handleTabClick(item.value)
-										}
-										className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md transition-colors ${
-											activeTab === item.value
-												? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
-												: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-										}`}
-									>
-										<span className="mr-3">
-											{item.icon}
-										</span>
-										<span>{item.name}</span>
-									</button>
-								</li>
-							))}
+							{navItems.map((item) => {
+								const allowed =
+									ROLE_PERMISSIONS[currentRole]?.includes(
+										item.value
+									) ?? false;
+								return (
+									<li key={item.name}>
+										<button
+											onClick={() =>
+												handleTabClick(item.value)
+											}
+											disabled={!allowed}
+											className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md transition-colors ${
+												activeTab === item.value
+													? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
+													: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+											} ${
+												!allowed
+													? "opacity-50 cursor-not-allowed"
+													: ""
+											}`}
+										>
+											<span className="mr-3">
+												{item.icon}
+											</span>
+											<span className="flex-1">
+												{item.name}
+											</span>
+											{!allowed && (
+												<span title="Locked">
+													<Lock className="h-4 w-4 text-gray-400" />
+												</span>
+											)}
+										</button>
+									</li>
+								);
+							})}
 							<li>
 								<button
 									onClick={handleLogout}
@@ -263,7 +323,7 @@ export default function DashboardClient() {
 									<User className="h-5 w-5 text-gray-500 dark:text-gray-300" />
 								</div>
 								<span className="ml-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-									admin
+									{currentRole}
 								</span>
 							</div>
 							<button

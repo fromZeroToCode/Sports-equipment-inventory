@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Edit, Trash, Search } from "lucide-react";
 import { useConfirm } from "@/components/ui/ConfirmProvider";
+import { toastError } from "@/hooks/useToast";
 
 import { getCategories, deleteCategory } from "@/utils/manipulateData";
 
@@ -17,6 +18,20 @@ export default function CategoriesComponent() {
 	const [editingCategory, setEditingCategory] = useState<Category | null>(
 		null
 	);
+
+	// role
+	const [currentRole, setCurrentRole] = useState<string>("guest");
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const parsed = raw ? JSON.parse(raw) : null;
+			setCurrentRole(parsed?.role ?? "guest");
+		} catch {
+			setCurrentRole("guest");
+		}
+	}, []);
+	const isManager = currentRole === "admin" || currentRole === "coach";
 
 	// search + pagination
 	const [searchTerm, setSearchTerm] = useState("");
@@ -39,12 +54,20 @@ export default function CategoriesComponent() {
 
 	// Handle edit category
 	const handleEdit = (category: Category) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot edit categories.");
+			return;
+		}
 		setEditingCategory(category);
 		setIsFormOpen(true);
 	};
 
 	// Handle delete category
 	const handleDelete = async (id: string) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot delete categories.");
+			return;
+		}
 		const ok = await confirm({
 			title: "Delete category",
 			description:
@@ -103,10 +126,22 @@ export default function CategoriesComponent() {
 
 					<button
 						onClick={() => {
+							if (!isManager) {
+								toastError(
+									"Unauthorized",
+									"Your role cannot add categories."
+								);
+								return;
+							}
 							setEditingCategory(null);
 							setIsFormOpen(true);
 						}}
-						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 whitespace-nowrap"
+						disabled={!isManager}
+						className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+							isManager
+								? "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+								: "bg-gray-300 cursor-not-allowed"
+						} whitespace-nowrap`}
 					>
 						<Plus className="h-4 w-4 mr-1" />
 						Add Category
@@ -174,7 +209,12 @@ export default function CategoriesComponent() {
 													onClick={() =>
 														handleEdit(category)
 													}
-													className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 													aria-label={`Edit ${category.name}`}
 													title={`Edit ${category.name}`}
 												>
@@ -186,7 +226,12 @@ export default function CategoriesComponent() {
 															category.id
 														)
 													}
-													className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 													aria-label={`Delete ${category.name}`}
 													title={`Delete ${category.name}`}
 												>

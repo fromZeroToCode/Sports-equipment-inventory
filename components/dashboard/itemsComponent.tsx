@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Search, Edit, Trash, Filter } from "lucide-react";
 import { useConfirm } from "@/components/ui/ConfirmProvider";
+import { toastError } from "@/hooks/useToast";
 
 import { Item, Category, Supplier } from "@/utils/types";
 import {
@@ -33,6 +34,21 @@ export default function ItemsComponent() {
 
 	const [showForm, setShowForm] = useState(false);
 	const [editingId, setEditingId] = useState<string | undefined>(undefined);
+
+	const [currentRole, setCurrentRole] = useState<string>("guest");
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const parsed = raw ? JSON.parse(raw) : null;
+			setCurrentRole(parsed?.role ?? "guest");
+		} catch {
+			setCurrentRole("guest");
+		}
+	}, []);
+
+	const isManager = currentRole === "admin" || currentRole === "coach";
+	const isViewOnly = currentRole === "staff";
 
 	// pagination
 	const PAGE_SIZE = 7;
@@ -66,9 +82,11 @@ export default function ItemsComponent() {
 		setCategories(loadedCategories);
 		setSuppliers(loadedSuppliers);
 
-		if (isAddMode) {
+		if (isAddMode && isManager) {
 			setShowForm(true);
 			setEditingId(undefined);
+		} else if (isAddMode && !isManager) {
+			router.replace("/dashboard/?tab=items");
 		}
 		if (searchedItems) {
 			setSearchTerm(searchedItems);
@@ -167,10 +185,18 @@ export default function ItemsComponent() {
 	]);
 
 	const openAdd = () => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot add items.");
+			return;
+		}
 		setEditingId(undefined);
 		setShowForm(true);
 	};
 	const openEdit = (id: string) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot edit items.");
+			return;
+		}
 		setEditingId(id);
 		setShowForm(true);
 	};
@@ -222,6 +248,10 @@ export default function ItemsComponent() {
 	};
 
 	const handleDelete = async (id: string) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot delete items.");
+			return;
+		}
 		const ok = await confirm({
 			title: "Delete Item",
 			description:
@@ -244,8 +274,20 @@ export default function ItemsComponent() {
 
 				<div className="flex items-center gap-3 max-[436px]:mt-4">
 					<button
-						onClick={() => openAdd()}
-						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-150"
+						onClick={() => {
+							if (isManager) openAdd();
+							else
+								toastError(
+									"Unauthorized",
+									"Your role cannot add items."
+								);
+						}}
+						disabled={!isManager}
+						className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+							isManager
+								? "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+								: "bg-gray-300 cursor-not-allowed"
+						} transition-all duration-150`}
 					>
 						<Plus className="h-4 w-4 mr-1" />
 						Add New Item
@@ -448,15 +490,32 @@ export default function ItemsComponent() {
 													onClick={() =>
 														openEdit(item.id)
 													}
-													className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 												>
 													<Edit className="h-5 w-5" />
 												</button>
 												<button
 													onClick={() =>
-														handleDelete(item.id)
+														isManager
+															? handleDelete(
+																	item.id
+															  )
+															: toastError(
+																	"Unauthorized",
+																	"Your role cannot delete items."
+															  )
 													}
-													className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 												>
 													<Trash className="h-5 w-5" />
 												</button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toastError, toastSuccess } from "@/hooks/useToast";
 import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,45 @@ import { loginUser } from "@/lib/auth";
 
 export default function login() {
 	useSessionRedirectToDashboard();
+
+	useEffect(() => {
+		const defaultRoles = [
+			{ id: 1, username: "admin", password: "admin123", role: "admin" },
+			{ id: 2, username: "coach", password: "coach123", role: "coach" },
+			{ id: 3, username: "staff", password: "staff123", role: "staff" },
+		];
+		try {
+			const raw = localStorage.getItem("roleAccess");
+			let roles = raw ? JSON.parse(raw) : null;
+
+			if (!Array.isArray(roles)) {
+				localStorage.setItem(
+					"roleAccess",
+					JSON.stringify(defaultRoles)
+				);
+				return;
+			}
+
+			let changed = false;
+			for (const req of defaultRoles) {
+				if (!roles.some((r: any) => r.role === req.role)) {
+					const maxId = roles.reduce(
+						(acc: number, r: any) =>
+							Math.max(acc, Number(r.id) || 0),
+						0
+					);
+					roles.push({ ...req, id: maxId + 1 });
+					changed = true;
+				}
+			}
+
+			if (changed) {
+				localStorage.setItem("roleAccess", JSON.stringify(roles));
+			}
+		} catch (err) {
+			localStorage.setItem("roleAccess", JSON.stringify(defaultRoles));
+		}
+	}, []);
 
 	const router = useRouter();
 	const [form, setForm] = useState({

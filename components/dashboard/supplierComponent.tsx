@@ -5,6 +5,7 @@ import { Plus, Edit, Trash, Search } from "lucide-react";
 import { getSuppliers, deleteSupplier } from "@/utils/manipulateData";
 import SupplierForm from "@/components/dashboard/supplierComponentForm/supplierForm";
 import { useConfirm } from "@/components/ui/ConfirmProvider";
+import { toastError } from "@/hooks/useToast";
 
 export default function SupplierComponent() {
 	const confirm = useConfirm();
@@ -15,6 +16,20 @@ export default function SupplierComponent() {
 	const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(
 		null
 	);
+
+	// role
+	const [currentRole, setCurrentRole] = useState<string>("guest");
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const parsed = raw ? JSON.parse(raw) : null;
+			setCurrentRole(parsed?.role ?? "guest");
+		} catch {
+			setCurrentRole("guest");
+		}
+	}, []);
+	const isManager = currentRole === "admin" || currentRole === "coach";
 
 	// search + pagination
 	const [searchTerm, setSearchTerm] = useState("");
@@ -31,12 +46,20 @@ export default function SupplierComponent() {
 	);
 
 	const handleEdit = (supplier: Supplier) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot edit suppliers.");
+			return;
+		}
 		setEditingSupplier(supplier);
 		setIsFormOpen(true);
 	};
 
 	// Handle delete supplier
 	const handleDelete = async (id: string) => {
+		if (!isManager) {
+			toastError("Unauthorized", "Your role cannot delete suppliers.");
+			return;
+		}
 		const ok = await confirm({
 			title: "Delete Supplier",
 			description:
@@ -99,8 +122,22 @@ export default function SupplierComponent() {
 					</div>
 
 					<button
-						onClick={() => setIsFormOpen(true)}
-						className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 whitespace-nowrap"
+						onClick={() => {
+							if (!isManager) {
+								toastError(
+									"Unauthorized",
+									"Your role cannot add suppliers."
+								);
+								return;
+							}
+							setIsFormOpen(true);
+						}}
+						disabled={!isManager}
+						className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+							isManager
+								? "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+								: "bg-gray-300 cursor-not-allowed"
+						} whitespace-nowrap`}
 					>
 						<Plus className="h-4 w-4 mr-1" />
 						Add Supplier
@@ -181,7 +218,12 @@ export default function SupplierComponent() {
 													onClick={() =>
 														handleEdit(supplier)
 													}
-													className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 												>
 													<Edit className="h-5 w-5" />
 												</button>
@@ -191,7 +233,12 @@ export default function SupplierComponent() {
 															supplier.id
 														)
 													}
-													className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+													disabled={!isManager}
+													className={`${
+														isManager
+															? "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+															: "text-gray-400 cursor-not-allowed"
+													}`}
 												>
 													<Trash className="h-5 w-5" />
 												</button>
