@@ -114,6 +114,55 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ isDarkMode }) => {
 		});
 	};
 
+	// Export history as CSV
+	const exportHistoryCSV = () => {
+		if (!history || history.length === 0) {
+			// create an empty file
+			const blob = new Blob([""], { type: "text/csv" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = `history_export_${new Date().toISOString()}.csv`;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			URL.revokeObjectURL(url);
+			return;
+		}
+
+		// Define CSV headers based on HistoryRecord keys
+		const headers = Object.keys(history[0]);
+		const csvRows = [];
+		csvRows.push(headers.join(","));
+
+		for (const record of history) {
+			const row = headers.map((header) => {
+				let val = (record as any)[header];
+				if (val === null || val === undefined) return "";
+				if (typeof val === "string") {
+					// Escape double quotes
+					return `"${val.replace(/"/g, '""')}"`;
+				}
+				if (typeof val === "object") {
+					return `"${JSON.stringify(val).replace(/"/g, '""')}"`;
+				}
+				return String(val);
+			});
+			csvRows.push(row.join(","));
+		}
+
+		const csvString = csvRows.join("\n");
+		const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = `history_export_${new Date().toISOString()}.csv`;
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		URL.revokeObjectURL(url);
+	};
+
 	// Format date for display
 	const formatDateTime = (dateString: string) => {
 		return new Date(dateString).toLocaleString();
@@ -379,16 +428,30 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ isDarkMode }) => {
 
 					{/* Clear Filters Button */}
 					<div className="mt-4">
-						<button
-							onClick={clearFilters}
-							className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-								isDarkMode
-									? "bg-gray-600 text-gray-300 hover:bg-gray-500"
-									: "bg-gray-200 text-gray-700 hover:bg-gray-300"
-							}`}
-						>
-							Clear Filters
-						</button>
+						<div className="flex flex-wrap gap-2">
+							<button
+								onClick={clearFilters}
+								className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+									isDarkMode
+										? "bg-gray-600 text-gray-300 hover:bg-gray-500"
+										: "bg-gray-200 text-gray-700 hover:bg-gray-300"
+								}`}
+							>
+								Clear Filters
+							</button>
+
+							<button
+								onClick={exportHistoryCSV}
+								title="Export full history as CSV"
+								className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+									isDarkMode
+										? "bg-green-700 text-white hover:bg-green-600"
+										: "bg-green-200 text-green-900 hover:bg-green-300"
+								}`}
+							>
+								Export CSV
+							</button>
+						</div>
 					</div>
 				</div>
 
