@@ -9,7 +9,9 @@ import {
 	Package,
 	Tag,
 	Truck,
+	ArrowLeftRight,
 	BarChart,
+	History,
 	Settings,
 	Lock,
 } from "lucide-react";
@@ -23,7 +25,9 @@ import HomeComponent from "@/components/dashboard/homeComponent";
 import ItemsComponent from "@/components/dashboard/itemsComponent";
 import CategoriesComponent from "@/components/dashboard/categoriesComponent";
 import SupplierComponent from "@/components/dashboard/supplierComponent";
+import BorrowComponent from "@/components/dashboard/borrowComponent";
 import ReportsComponent from "@/components/dashboard/reportsComponent";
+import HistoryComponent from "@/components/dashboard/historyComponent";
 import SettingsComponent from "@/components/dashboard/settingsComponent";
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
@@ -32,11 +36,13 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 		"items",
 		"categories",
 		"suppliers",
+		"borrows",
 		"reports",
+		"history",
 		"settings",
 	],
-	staff: ["dashboard", "items", "categories", "suppliers"],
-	coach: ["dashboard", "items", "categories", "suppliers"],
+	staff: ["dashboard", "items", "categories", "suppliers", "borrows"],
+	coach: ["dashboard", "items", "categories", "suppliers", "borrows"],
 };
 
 import Image from "next/image";
@@ -47,11 +53,14 @@ import { clearAllData } from "@/utils/localStorageManipulation";
 import generateMockData from "@/utils/generateMockData";
 
 const TAB_MAP: Record<string, string> = {
-	findroute: "Find Route",
-	traffics: "Traffics",
-	reports: "Reports",
-	settings: "Settings",
 	dashboard: "Dashboard",
+	items: "Items",
+	categories: "Categories",
+	suppliers: "Suppliers",
+	borrows: "Borrows",
+	reports: "Reports",
+	history: "History",
+	settings: "Settings",
 };
 
 export default function DashboardClient() {
@@ -69,6 +78,7 @@ export default function DashboardClient() {
 	const [activeTab, setActiveTab] = useState(initialTab);
 
 	const [currentRole, setCurrentRole] = useState<string>("guest");
+	const [isDarkMode, setIsDarkMode] = useState(false);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -86,6 +96,25 @@ export default function DashboardClient() {
 		} catch {
 			setCurrentRole("guest");
 		}
+	}, []);
+
+	// Dark mode detection
+	useEffect(() => {
+		const updateDarkMode = () => {
+			setIsDarkMode(document.documentElement.classList.contains("dark"));
+		};
+
+		// Initial check
+		updateDarkMode();
+
+		// Watch for changes
+		const observer = new MutationObserver(updateDarkMode);
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+
+		return () => observer.disconnect();
 	}, []);
 
 	const navItems = [
@@ -110,9 +139,19 @@ export default function DashboardClient() {
 			icon: <Truck className="h-5 w-5" />,
 		},
 		{
+			name: "Borrows",
+			value: "borrows",
+			icon: <ArrowLeftRight className="h-5 w-5" />,
+		},
+		{
 			name: "Reports",
 			value: "reports",
 			icon: <BarChart className="h-5 w-5" />,
+		},
+		{
+			name: "History",
+			value: "history",
+			icon: <History className="h-5 w-5" />,
 		},
 		{
 			name: "Settings",
@@ -181,8 +220,12 @@ export default function DashboardClient() {
 				return <CategoriesComponent />;
 			case "suppliers":
 				return <SupplierComponent />;
+			case "borrows":
+				return <BorrowComponent isDarkMode={isDarkMode} />;
 			case "reports":
 				return <ReportsComponent />;
+			case "history":
+				return <HistoryComponent isDarkMode={isDarkMode} />;
 			case "settings":
 				return <SettingsComponent />;
 			default:

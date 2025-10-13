@@ -215,6 +215,13 @@ export default function SettingsComponent() {
 				settings: localStorage.getItem("settings")
 					? JSON.parse(localStorage.getItem("settings")!)
 					: {},
+				history: localStorage.getItem("history")
+					? JSON.parse(localStorage.getItem("history")!)
+					: [],
+				borrows: localStorage.getItem("borrows")
+					? JSON.parse(localStorage.getItem("borrows")!)
+					: [],
+				roleAccess: localStorage.getItem("roleAccess"),
 			};
 			const dataStr = JSON.stringify(exportData, null, 2);
 			const dataUri =
@@ -292,6 +299,27 @@ export default function SettingsComponent() {
 							);
 						}
 
+						if (data.history && Array.isArray(data.history)) {
+							localStorage.setItem(
+								"history",
+								JSON.stringify(data.history)
+							);
+						}
+
+						if (data.borrows && Array.isArray(data.borrows)) {
+							localStorage.setItem(
+								"borrows",
+								JSON.stringify(data.borrows)
+							);
+						}
+
+						if (data.roleAccess && Array.isArray(data.roleAccess)) {
+							localStorage.setItem(
+								"roleAccess",
+								JSON.stringify(data.roleAccess)
+							);
+						}
+
 						if (
 							data.settings &&
 							typeof data.settings === "object"
@@ -308,13 +336,6 @@ export default function SettingsComponent() {
 							if (data.settings.currency !== undefined) {
 								setCurrency(data.settings.currency);
 							}
-						}
-
-						if (data.roleAccess && Array.isArray(data.roleAccess)) {
-							localStorage.setItem(
-								"roleAccess",
-								JSON.stringify(data.roleAccess)
-							);
 						}
 
 						toastSuccess(
