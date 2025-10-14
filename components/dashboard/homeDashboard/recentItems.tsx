@@ -29,7 +29,7 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 	}, [limit]);
 
 	return (
-		<div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/30 p-6 border border-gray-200 dark:border-gray-700">
+		<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow dark:shadow-gray-700/30 p-6 border border-gray-200 dark:border-gray-800">
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center gap-3">
 					<Box className="h-5 w-5 text-gray-600 dark:text-gray-400" />
@@ -52,7 +52,7 @@ export default function RecentItems({ limit = 6 }: { limit?: number }) {
 			) : (
 				<div className="overflow-auto">
 					<table className="min-w-full table-fixed text-sm whitespace-nowrap">
-						<thead className="bg-gray-50 dark:bg-gray-700">
+						<thead className="bg-gray-50 dark:bg-[#1d1d28] border-b border-gray-200 dark:border-gray-700">
 							<tr>
 								<th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
 									Item

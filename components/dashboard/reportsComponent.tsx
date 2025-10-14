@@ -113,7 +113,7 @@ export default function ReportsComponent() {
 	return (
 		<div className="space-y-6">
 			<div className="flex justify-between items-center">
-				<h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+				<h1 className="text-2xl font-bold text-[#1d1d28]  dark:text-gray-100">
 					Reports
 				</h1>
 				<button
@@ -126,7 +126,7 @@ export default function ReportsComponent() {
 			</div>
 			{/* Summary Cards */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+				<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow p-6">
 					<div className="flex items-center">
 						<div className="rounded-full p-3 bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
 							<FileText className="h-6 w-6" />
@@ -141,7 +141,7 @@ export default function ReportsComponent() {
 						</div>
 					</div>
 				</div>
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+				<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow p-6">
 					<div className="flex items-center">
 						<div className="rounded-full p-3 bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300">
 							<FileText className="h-6 w-6" />
@@ -160,7 +160,7 @@ export default function ReportsComponent() {
 						</div>
 					</div>
 				</div>
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+				<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow p-6">
 					<div className="flex items-center">
 						<div className="rounded-full p-3 bg-yellow-100 dark:bg-yellow-800 text-yellow-600 dark:text-yellow-300">
 							<FileText className="h-6 w-6" />
@@ -183,7 +183,7 @@ export default function ReportsComponent() {
 			{/* Charts */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 				{/* Category Value Chart */}
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+				<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow p-6">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
 						Inventory Value by Category
 					</h3>
@@ -218,7 +218,7 @@ export default function ReportsComponent() {
 					</div>
 				</div>
 				{/* Stock Status Chart */}
-				<div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+				<div className="bg-white dark:bg-[#1d1d28]  rounded-lg shadow p-6">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
 						Items by Stock Status
 					</h3>
@@ -250,7 +250,7 @@ export default function ReportsComponent() {
 			</div>
 
 			{/* Inventory Value Table */}
-			<div className="bg-white dark:bg-gray-800 shadow rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28]  shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						Inventory Value Report
@@ -258,7 +258,7 @@ export default function ReportsComponent() {
 				</div>
 				<div className="overflow-x-auto">
 					<table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-						<thead className="bg-gray-50 dark:bg-gray-700">
+						<thead className="bg-gray-50 dark:bg-[#1d1d28] ">
 							<tr>
 								<th
 									scope="col"
@@ -292,7 +292,7 @@ export default function ReportsComponent() {
 								</th>
 							</tr>
 						</thead>
-						<tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+						<tbody className="bg-white dark:bg-[#1d1d28]  divide-y divide-gray-200 dark:divide-gray-700">
 							{items.length > 0 ? (
 								items.map((item) => (
 									<tr key={item.id}>
@@ -337,7 +337,7 @@ export default function ReportsComponent() {
 								</tr>
 							)}
 							{items.length > 0 && (
-								<tr className="bg-gray-50 dark:bg-gray-700">
+								<tr className="bg-gray-50 dark:bg-[#1d1d28] ">
 									<td
 										colSpan={4}
 										className="px-6 py-4 text-right text-sm font-medium text-gray-900 dark:text-gray-100"

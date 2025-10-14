@@ -308,7 +308,7 @@ export default function ItemsComponent() {
 			)}
 
 			{/* Filters */}
-			<div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow dark:shadow-gray-700/30">
+			<div className="bg-white dark:bg-[#1d1d28] p-4 rounded-lg shadow dark:shadow-gray-700/30">
 				<div className="grid grid-cols-5 max-[1280px]:grid-cols-2 max-sm:grid-cols-1 gap-4">
 					{/* Search */}
 					<div className="relative">
@@ -317,16 +317,16 @@ export default function ItemsComponent() {
 						</div>
 						<input
 							type="text"
-							className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+							className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-800 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 							placeholder="Search items..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
 					</div>
 					{/* Category Filter */}
-					<div className="bg-gray-100 dark:bg-gray-700 rounded-md">
+					<div className="bg-gray-100 dark:bg-[#2A2A3B] rounded-md">
 						<select
-							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-800 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 							value={categoryFilter}
 							onChange={(e) => setCategoryFilter(e.target.value)}
 						>
@@ -339,9 +339,9 @@ export default function ItemsComponent() {
 						</select>
 					</div>
 					{/* Supplier Filter */}
-					<div className="bg-gray-100 dark:bg-gray-700 rounded-md">
+					<div className="bg-gray-100 dark:bg-[#2A2A3B] rounded-md">
 						<select
-							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-800 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 							value={supplierFilter}
 							onChange={(e) => setSupplierFilter(e.target.value)}
 						>
@@ -354,9 +354,9 @@ export default function ItemsComponent() {
 						</select>
 					</div>
 					{/* Stock Status Filter */}
-					<div className="bg-gray-100 dark:bg-gray-700 rounded-md">
+					<div className="bg-gray-100 dark:bg-[#2A2A3B] rounded-md">
 						<select
-							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+							className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-800 focus:outline-none  sm:text-sm rounded-md bg-gray-100 dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 							value={stockFilter}
 							onChange={(e) => setStockFilter(e.target.value)}
 						>
@@ -376,7 +376,7 @@ export default function ItemsComponent() {
 									s === "desc" ? "asc" : "desc"
 								)
 							}
-							className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600"
+							className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-800 bg-white dark:bg-[#2A2A3B] text-sm rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600"
 							title="Toggle sort order"
 						>
 							<Filter
@@ -407,7 +407,7 @@ export default function ItemsComponent() {
 									}
 								}
 							}}
-							className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-150"
+							className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-800 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-[#2A2A3B] hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-150"
 						>
 							Clear Filters
 						</button>
@@ -416,10 +416,10 @@ export default function ItemsComponent() {
 			</div>
 
 			{/* Items Table */}
-			<div className="bg-white dark:bg-gray-800 shadow dark:shadow-gray-700/30 rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28]  shadow dark:shadow-gray-700/30 rounded-lg ">
 				<div className="overflow-x-auto">
 					<table className="min-w-full table-fixed text-sm whitespace-nowrap">
-						<thead className="bg-gray-50 dark:bg-gray-700">
+						<thead className="bg-white dark:bg-[#1d1d28] border-b border-gray-200 dark:border-gray-700">
 							<tr>
 								<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
 									Item Name
@@ -427,7 +427,7 @@ export default function ItemsComponent() {
 								<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
 									Category
 								</th>
-								<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
 									Quantity
 								</th>
 								<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -444,7 +444,7 @@ export default function ItemsComponent() {
 								</th>
 							</tr>
 						</thead>
-						<tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+						<tbody className="bg-white dark:bg-[#1d1d28]  divide-y divide-gray-200 dark:divide-gray-700">
 							{pagedItems.length > 0 ? (
 								pagedItems.map((item) => (
 									<tr key={item.id}>
@@ -537,7 +537,7 @@ export default function ItemsComponent() {
 					</table>
 				</div>
 				{/* Pagination controls */}
-				<div className="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
+				<div className="px-4 py-3 bg-white dark:bg-[#1d1d28]  border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
 					<div className="text-sm text-gray-700 dark:text-gray-300">
 						Showing{" "}
 						<span className="font-medium">

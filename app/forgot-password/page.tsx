@@ -79,20 +79,20 @@ export default function ForgotPasswordPage() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-900 p-4">
+		<div className="min-h-screen flex items-center justify-center bg-[#f3f3f3] dark:bg-[#11111d] p-4">
 			<div className="absolute top-4 right-4">
 				<DarkModeButton />
 			</div>
 			<div className="w-full max-w-md">
-				<div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+				<div className="bg-white dark:bg-[#1d1d28] p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
 					<header className="mb-4 text-center">
 						<div className="mx-auto w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-3">
 							<FileText className="text-white" size={18} />
 						</div>
-						<h1 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+						<h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
 							Forgot Password
 						</h1>
-						<p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+						<p className="text-md text-gray-600 dark:text-gray-300 mt-1">
 							Find your account by username, then reset your
 							password.
 						</p>
@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
 							className="space-y-4"
 						>
 							<div>
-								<label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+								<label className="block text-md font-medium text-gray-700 dark:text-gray-300">
 									Username
 								</label>
 								<input
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
 										setUsername(e.target.value.trim())
 									}
 									placeholder="e.g. admin"
-									className="mt-2 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+									className="mt-2 block w-full rounded-md border-gray-500 dark:border-gray-700 bg-slate-50 dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 									required
 									aria-label="Username"
 								/>
@@ -127,7 +127,7 @@ export default function ForgotPasswordPage() {
 								<button
 									type="button"
 									onClick={() => router.push("/")}
-									className=" text-sm text-gray-600 hover:underline"
+									className=" text-sm text-gray-600 dark:text-gray-400 hover:underline"
 								>
 									Back to sign in
 								</button>
@@ -157,7 +157,7 @@ export default function ForgotPasswordPage() {
 											setNewPassword(e.target.value)
 										}
 										placeholder="Enter new password"
-										className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 										required
 										minLength={8}
 										aria-label="New password"
@@ -192,7 +192,7 @@ export default function ForgotPasswordPage() {
 											setConfirmPassword(e.target.value)
 										}
 										placeholder="Confirm new password"
-										className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+										className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100 shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 										required
 										minLength={8}
 										aria-label="Confirm password"
@@ -223,7 +223,7 @@ export default function ForgotPasswordPage() {
 										setNewPassword("");
 										setConfirmPassword("");
 									}}
-									className="text-sm text-gray-600 hover:underline"
+									className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
 								>
 									Back
 								</button>

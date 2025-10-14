@@ -151,13 +151,13 @@ export default function ItemForm({
 	};
 
 	return (
-		<div className="space-y-6 bg-white dark:bg-gray-800 rounded-lg p-6 shadow ">
+		<div className="space-y-6 bg-white dark:bg-[#1d1d28] rounded-lg p-6 shadow ">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center">
 					{onClose ? (
 						<button
 							onClick={() => finish()}
-							className="mr-4 p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+							className="mr-4 p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
 							type="button"
 						>
 							<ArrowLeft className="h-5 w-5" />
@@ -176,7 +176,7 @@ export default function ItemForm({
 					</h1>
 				</div>
 			</div>
-			<div className="bg-white dark:bg-gray-800 rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28] rounded-lg ">
 				<form onSubmit={handleSubmit} className=" space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{/* Item Name */}
@@ -193,7 +193,7 @@ export default function ItemForm({
 								id="name"
 								value={name}
 								onChange={(e) => setName(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -209,7 +209,7 @@ export default function ItemForm({
 								id="category"
 								value={categoryId}
 								onChange={(e) => setCategoryId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 								required
 							>
 								<option value="">Select Category</option>
@@ -240,7 +240,7 @@ export default function ItemForm({
 									setQuantity(parseInt(e.target.value) || 0)
 								}
 								min={0}
-								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -259,7 +259,7 @@ export default function ItemForm({
 								placeholder="e.g., Aisle 3, Shelf B"
 								value={location}
 								onChange={(e) => setLocation(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+								className="mt-1 block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 								required
 							/>
 						</div>
@@ -276,7 +276,7 @@ export default function ItemForm({
 								id="supplier"
 								value={supplierId}
 								onChange={(e) => setSupplierId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-[#2A2A3B] dark:border-gray-800 dark:text-gray-100 bg-white text-gray-900"
 								required
 							>
 								<option value="">Select Supplier</option>
@@ -306,7 +306,7 @@ export default function ItemForm({
 								onChange={(e) =>
 									setPurchaseDate(e.target.value)
 								}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-[#2A2A3B] dark:border-gray-800 dark:text-gray-100 bg-white text-gray-900"
 								required
 							/>
 						</div>
@@ -328,7 +328,7 @@ export default function ItemForm({
 								}
 								step="0.01"
 								min="0"
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 bg-white text-gray-900"
+								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-[#2A2A3B] dark:border-gray-800 dark:text-gray-100 bg-white text-gray-900"
 								required
 							/>
 						</div>
@@ -338,7 +338,7 @@ export default function ItemForm({
 						<button
 							type="button"
 							onClick={() => finish()}
-							className="bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							className="bg-white dark:bg-[#2A2A3B] py-2 px-4 border border-gray-300 dark:border-gray-800 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 						>
 							Cancel
 						</button>

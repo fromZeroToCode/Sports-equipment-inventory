@@ -553,7 +553,7 @@ export default function SettingsComponent() {
 			</div>
 
 			{/* System Settings Card */}
-			<div className="bg-white dark:bg-gray-800 shadow rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28]  shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						System Settings
@@ -634,7 +634,7 @@ export default function SettingsComponent() {
 				</form>
 			</div>
 
-			<div className="bg-white dark:bg-gray-800 shadow rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28]  shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						Data Management
@@ -692,7 +692,7 @@ export default function SettingsComponent() {
 			</div>
 
 			{/* User Management Card */}
-			<div className="bg-white dark:bg-gray-800 shadow rounded-lg ">
+			<div className="bg-white dark:bg-[#1d1d28]  shadow rounded-lg ">
 				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						Account Management
@@ -721,7 +721,7 @@ export default function SettingsComponent() {
 					{/* users table */}
 					<div className="overflow-x-auto">
 						<table className="min-w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
-							<thead className="bg-gray-50 dark:bg-gray-800">
+							<thead className="bg-gray-50 dark:bg-[#1d1d28] ">
 								<tr>
 									<th className="px-4 py-2 text-left text-gray-600 dark:text-gray-300">
 										Username
@@ -734,7 +734,7 @@ export default function SettingsComponent() {
 									</th>
 								</tr>
 							</thead>
-							<tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+							<tbody className="bg-white dark:bg-[#1d1d28]  divide-y divide-gray-200 dark:divide-gray-700">
 								{users.map((u) => (
 									<tr key={u.id}>
 										<td className="px-4 py-3 text-gray-800 dark:text-gray-100">
@@ -796,7 +796,7 @@ export default function SettingsComponent() {
 			{/* user form modal */}
 			{isUserFormOpen && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-					<div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+					<div className="w-full max-w-md bg-white dark:bg-[#1d1d28]  rounded-lg shadow-lg overflow-hidden">
 						<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 							<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 								{editingUser ? "Edit Account" : "Add Account"}
@@ -880,7 +880,7 @@ export default function SettingsComponent() {
 			{/* password prompt modal */}
 			{showPasswordPrompt && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-					<div className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden p-6">
+					<div className="w-full max-w-sm bg-white dark:bg-[#1d1d28]  rounded-lg shadow-lg overflow-hidden p-6">
 						<h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
 							Confirm with Your Password
 						</h4>

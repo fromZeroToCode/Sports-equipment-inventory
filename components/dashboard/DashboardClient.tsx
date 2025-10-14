@@ -251,10 +251,10 @@ export default function DashboardClient() {
 	};
 
 	return (
-		<div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+		<div className="flex h-screen bg-[#f3f3f3] dark:bg-[#11111d] ">
 			{/* Sidebar */}
 			<aside
-				className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 transform z-30 transition-transform duration-200 ease-in-out
+				className={`fixed inset-y-0 left-0 w-64 bg-white  border-r border-gray-200 dark:bg-[#1d1d28] dark:border-gray-800 transform z-30 transition-transform duration-200 ease-in-out
                     ${
 						sidebarOpen ? "translate-x-0" : "-translate-x-full"
 					} lg:translate-x-0`}
@@ -342,7 +342,7 @@ export default function DashboardClient() {
 			{/* Main content area */}
 			<div className="flex-1 flex flex-col lg:pl-64 w-full ">
 				{/* header */}
-				<header className="bg-white shadow-sm z-10 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+				<header className="bg-white shadow-sm z-10 dark:bg-[#1d1d28] border-b border-gray-200 dark:border-gray-800">
 					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
 						<button
 							type="button"

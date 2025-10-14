@@ -104,7 +104,7 @@ export default function CategoriesComponent() {
 	return (
 		<div className="space-y-6">
 			<div className="flex justify-between items-center max-md:flex-col max-md:items-start gap-3 w-full">
-				<h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+				<h1 className="text-2xl font-bold text-[#1d1d28] dark:text-gray-100">
 					Categories
 				</h1>
 
@@ -120,7 +120,7 @@ export default function CategoriesComponent() {
 							placeholder="Search categories..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							className="pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm sm:text-sm w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+							className="pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-800 rounded-md shadow-sm sm:text-sm w-full bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
 						/>
 					</div>
 
@@ -164,10 +164,10 @@ export default function CategoriesComponent() {
 			)}
 
 			{/* Categories List */}
-			<div className="bg-white dark:bg-gray-800 shadow dark:shadow-gray-700/30 rounded-lg">
+			<div className="bg-white dark:bg-[#1d1d28] shadow dark:shadow-gray-700/30 rounded-lg">
 				<div className="overflow-x-auto">
 					<table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-						<thead className="bg-gray-50 dark:bg-gray-700">
+						<thead className="bg-white dark:bg-[#1d1d28] border-b border-gray-200 dark:border-gray-700">
 							<tr>
 								<th
 									scope="col"
@@ -189,7 +189,7 @@ export default function CategoriesComponent() {
 								</th>
 							</tr>
 						</thead>
-						<tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+						<tbody className="bg-white dark:bg-[#1d1d28] divide-y divide-gray-200 dark:divide-gray-700">
 							{pagedCategories.length > 0 ? (
 								pagedCategories.map((category) => (
 									<tr key={category.id}>
@@ -255,7 +255,7 @@ export default function CategoriesComponent() {
 					</table>
 				</div>
 				{/* Pagination controls */}
-				<div className="px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
+				<div className="px-4 py-3 bg-white dark:bg-[#1d1d28] border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
 					<div className="text-sm text-gray-700 dark:text-gray-300">
 						Showing{" "}
 						<span className="font-medium">

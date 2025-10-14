@@ -6,6 +6,7 @@ import { Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionRedirectToDashboard } from "@/hooks/useSessionRedirect";
 import DarkModeButton from "@/components/ui/DarkModeButton";
+import Image from "next/image";
 
 import { loginUser } from "@/lib/auth";
 
@@ -144,15 +145,20 @@ export default function login() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-indigo-50 dark:bg-gray-900 p-4">
+		<div className="min-h-screen flex items-center justify-center bg-[#f3f3f3] dark:bg-[#11111d] p-4">
 			<div className="absolute top-4 right-4">
 				<DarkModeButton />
 			</div>
 			<div className="w-full max-w-md">
-				<div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+				<div className="bg-white dark:bg-[#1d1d28] p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
 					<header className="text-center mb-6">
-						<div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-							<Lock className="text-white" size={24} />
+						<div className="mx-auto w-16 h-16  rounded-full flex items-center justify-center mb-4">
+							<Image
+								src="/Sports-equipment-inventory/logo.svg"
+								alt="Logo"
+								width={64}
+								height={64}
+							/>
 						</div>
 						<h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
 							GearSync

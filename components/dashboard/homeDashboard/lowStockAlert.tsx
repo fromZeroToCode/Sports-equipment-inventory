@@ -50,7 +50,7 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 	const pagedItems = items.slice(startIdx, endIdx);
 
 	return (
-		<div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/30 p-6 border border-gray-200 dark:border-gray-700">
+		<div className="bg-white dark:bg-[#1d1d28] rounded-lg shadow dark:shadow-gray-700/30 p-6 border border-gray-200 dark:border-gray-800">
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center gap-3">
 					<AlertTriangle className="h-5 w-5 text-yellow-500 dark:text-yellow-400" />
