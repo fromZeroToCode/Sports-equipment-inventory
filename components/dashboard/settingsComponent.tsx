@@ -186,6 +186,7 @@ export default function SettingsComponent() {
 				"Are you sure you want to reset all data? This cannot be undone.",
 			confirmText: "Reset",
 			cancelText: "Cancel",
+			variant: "danger",
 		});
 		if (!ok) return;
 		clearAllData();
@@ -258,6 +259,7 @@ export default function SettingsComponent() {
 				"Are you sure you want to import data? This will overwrite all existing data and cannot be undone.",
 			confirmText: "Import",
 			cancelText: "Cancel",
+			variant: "default",
 		});
 		if (!ok) return;
 
@@ -518,6 +520,7 @@ export default function SettingsComponent() {
 				"Are you sure you want to delete this account? This cannot be undone.",
 			confirmText: "Delete",
 			cancelText: "Cancel",
+			variant: "danger",
 		});
 		if (!ok) return;
 		requestPasswordConfirmFor({ type: "delete", payload: { id } });

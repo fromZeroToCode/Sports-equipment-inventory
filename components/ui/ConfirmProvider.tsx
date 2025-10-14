@@ -4,6 +4,7 @@ import React, { createContext, useContext, useRef, useState } from "react";
 type ConfirmOptions = {
 	title?: string;
 	description?: string;
+	variant?: "default" | "danger";
 	confirmText?: string;
 	cancelText?: string;
 };
@@ -32,6 +33,11 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 		resolverRef.current = null;
 	};
 
+	const confirmButtonClasses =
+		opts.variant === "danger"
+			? "px-4 py-2 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
+			: "px-4 py-2 rounded-md bg-green-600 text-white text-sm hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600";
+
 	return (
 		<ConfirmContext.Provider value={confirm}>
 			{children}
@@ -57,7 +63,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 								</button>
 								<button
 									onClick={() => close(true)}
-									className="px-4 py-2 rounded-md bg-red-600 text-white text-sm hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
+									className={confirmButtonClasses}
 								>
 									{opts.confirmText ?? "Confirm"}
 								</button>

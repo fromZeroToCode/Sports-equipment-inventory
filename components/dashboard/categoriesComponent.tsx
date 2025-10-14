@@ -53,7 +53,7 @@ export default function CategoriesComponent() {
 	};
 
 	// Handle edit category
-	const handleEdit = (category: Category) => {
+	const handleEdit = async (category: Category) => {
 		if (!isManager) {
 			toastError("Unauthorized", "Your role cannot edit categories.");
 			return;
@@ -74,6 +74,7 @@ export default function CategoriesComponent() {
 				"Are you sure you want to delete this category? This cannot be undone.",
 			confirmText: "Delete",
 			cancelText: "Cancel",
+			variant: "danger",
 		});
 		if (!ok) return;
 		deleteCategory(id);

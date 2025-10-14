@@ -66,6 +66,7 @@ export default function SupplierComponent() {
 				"Are you sure you want to delete this supplier? This cannot be undone.",
 			confirmText: "Delete",
 			cancelText: "Cancel",
+			variant: "danger",
 		});
 		if (!ok) return;
 

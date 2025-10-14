@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Supplier } from "@/utils/types";
 import { X } from "lucide-react";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 import { addSupplier, updateSupplier } from "@/utils/manipulateData";
 
@@ -14,13 +15,24 @@ export default function SupplierForm({
 	onClose: () => void;
 	onSaved?: () => void;
 }) {
+	const confirm = useConfirm();
 	const [name, setName] = useState("");
 	const [contact, setContact] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		const ok = await confirm({
+			title: editingSupplier ? "Edit Supplier" : "Add Supplier",
+			description: editingSupplier
+				? "Are you sure you want to edit this supplier? This cannot be undone."
+				: "Are you sure you want to add this supplier? This cannot be undone.",
+			confirmText: editingSupplier ? "Edit" : "Add",
+			cancelText: "Cancel",
+			variant: "default",
+		});
+		if (!ok) return;
 		if (editingSupplier) {
 			updateSupplier({
 				...editingSupplier,

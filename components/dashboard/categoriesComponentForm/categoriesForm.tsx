@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { addCategory, updateCategory } from "@/utils/manipulateData";
 import { Category } from "@/utils/types";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 export default function CategoriesForm({
 	editingCategory,
@@ -12,6 +13,7 @@ export default function CategoriesForm({
 	onClose: () => void;
 	onSaved?: () => void;
 }) {
+	const confirm = useConfirm();
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 
@@ -25,8 +27,17 @@ export default function CategoriesForm({
 		}
 	}, [editingCategory]);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		const ok = await confirm({
+			title: "Save category",
+			description:
+				"Are you sure you want to save this category? This cannot be undone.",
+			confirmText: "Save",
+			cancelText: "Cancel",
+			variant: "default",
+		});
+		if (!ok) return;
 		if (editingCategory) {
 			updateCategory({
 				...editingCategory,

@@ -258,6 +258,7 @@ export default function ItemsComponent() {
 				"Are you sure you want to delete this item? This cannot be undone.",
 			confirmText: "Delete",
 			cancelText: "Cancel",
+			variant: "danger",
 		});
 		if (!ok) return;
 		deleteItem(id);

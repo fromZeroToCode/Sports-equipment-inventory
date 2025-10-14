@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
 	Menu,
@@ -73,9 +73,12 @@ export default function DashboardClient() {
 		searchParams = null;
 	}
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+	const avatarMenuRef = useRef<HTMLDivElement | null>(null);
 
 	const initialTab = searchParams?.get("tab") || "dashboard";
 	const [activeTab, setActiveTab] = useState(initialTab);
+	const [currentUserName, setCurrentUserName] = useState<string>("");
 
 	const [currentRole, setCurrentRole] = useState<string>("guest");
 	const [isDarkMode, setIsDarkMode] = useState(false);
@@ -86,6 +89,8 @@ export default function DashboardClient() {
 			const raw = localStorage.getItem("currentUser");
 			const parsed = raw ? JSON.parse(raw) : null;
 			const role = parsed?.role ?? "guest";
+			const username = parsed?.username ?? "Guest";
+			setCurrentUserName(username);
 			setCurrentRole(role);
 
 			const allowed = ROLE_PERMISSIONS[role] ?? ["dashboard"];
@@ -124,9 +129,9 @@ export default function DashboardClient() {
 			icon: <Home className="h-5 w-5" />,
 		},
 		{
-			name: "Items",
-			value: "items",
-			icon: <Package className="h-5 w-5" />,
+			name: "Suppliers",
+			value: "suppliers",
+			icon: <Truck className="h-5 w-5" />,
 		},
 		{
 			name: "Categories",
@@ -134,9 +139,9 @@ export default function DashboardClient() {
 			icon: <Tag className="h-5 w-5" />,
 		},
 		{
-			name: "Suppliers",
-			value: "suppliers",
-			icon: <Truck className="h-5 w-5" />,
+			name: "Items",
+			value: "items",
+			icon: <Package className="h-5 w-5" />,
 		},
 		{
 			name: "Borrows",
@@ -201,6 +206,21 @@ export default function DashboardClient() {
 		}
 	}, [searchParams]);
 
+	// close avatar menu when clicking outside
+	useEffect(() => {
+		function onDocClick(e: MouseEvent) {
+			if (
+				avatarMenuOpen &&
+				avatarMenuRef.current &&
+				!avatarMenuRef.current.contains(e.target as Node)
+			) {
+				setAvatarMenuOpen(false);
+			}
+		}
+		document.addEventListener("click", onDocClick);
+		return () => document.removeEventListener("click", onDocClick);
+	}, [avatarMenuOpen]);
+
 	useEffect(() => {
 		if (typeof window !== "undefined" && searchParams) {
 			const tab = (searchParams.get("tab") ?? "dashboard").toLowerCase();
@@ -260,7 +280,7 @@ export default function DashboardClient() {
 					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
-				<div className="flex items-center h-16 px-4 bg-blue-600 dark:bg-blue-700 justify-between">
+				<div className="flex items-center h-16 px-4 bg-blue-600 dark:bg-inherit justify-between">
 					<div className="flex items-center">
 						<Image
 							src="/Sports-equipment-inventory/logo.svg"
@@ -323,17 +343,6 @@ export default function DashboardClient() {
 									</li>
 								);
 							})}
-							<li>
-								<button
-									onClick={handleLogout}
-									className="w-full flex items-center px-4 py-2 text-sm font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
-								>
-									<span className="mr-3">
-										<LogOut className="h-5 w-5" />
-									</span>
-									<span>Log out</span>
-								</button>
-							</li>
 						</ul>
 					</nav>
 				</div>
@@ -362,20 +371,67 @@ export default function DashboardClient() {
 								<div className="mr-4 flex items-center ">
 									<DarkModeButton />
 								</div>
-								<div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-									<User className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+								{/* Avatar + dropdown */}
+								<div className="relative" ref={avatarMenuRef}>
+									<div
+										onClick={() =>
+											setAvatarMenuOpen((s) => !s)
+										}
+										className="flex flex-row items-center cursor-pointer"
+									>
+										<button
+											type="button"
+											className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+											aria-expanded={avatarMenuOpen}
+										>
+											<User className="h-5 w-5 text-gray-500 dark:text-gray-300" />
+										</button>
+										<span className="ml-2 hidden sm:inline-block text-sm font-semibold text-gray-700 dark:text-gray-300">
+											{currentUserName || currentRole}
+										</span>
+										
+									</div>
+
+									{avatarMenuOpen && (
+										<div className="absolute right-0 mt-2 w-44 bg-white dark:bg-[#1d1d28] border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50">
+											<div className="py-2">
+												<button
+													onClick={() => {
+														// open settings tab
+														setAvatarMenuOpen(
+															false
+														);
+														setActiveTab(
+															"settings"
+														);
+														router.push(
+															`/dashboard?tab=settings`,
+															{ scroll: false }
+														);
+													}}
+													className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+												>
+													<Settings className="h-4 w-4 mr-1" />
+													<span>Settings</span>
+												</button>
+												<hr className="my-1 border-gray-100 dark:border-gray-700" />
+												<button
+													onClick={() => {
+														setAvatarMenuOpen(
+															false
+														);
+														handleLogout();
+													}}
+													className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+												>
+													<LogOut className="h-4 w-4 mr-1" />
+													<span>Log out</span>
+												</button>
+											</div>
+										</div>
+									)}
 								</div>
-								<span className="ml-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
-									{currentRole}
-								</span>
 							</div>
-							<button
-								onClick={handleLogout}
-								className="inline-flex items-center p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-								aria-label="Log out"
-							>
-								<LogOut className="h-5 w-5" />
-							</button>
 						</div>
 					</div>
 				</header>

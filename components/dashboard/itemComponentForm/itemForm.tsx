@@ -9,9 +9,14 @@ import {
 	getCategories,
 	getSuppliers,
 	getCurrency,
+	addCategory,
+	addSupplier,
 } from "@/utils/manipulateData";
 import { Category, Supplier, Item } from "@/utils/types";
 import { toastError } from "@/hooks/useToast";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
+import SupplierForm from "@/components/dashboard/supplierComponentForm/supplierForm";
+import CategoriesForm from "@/components/dashboard/categoriesComponentForm/categoriesForm";
 
 export default function ItemForm({
 	itemId,
@@ -22,6 +27,7 @@ export default function ItemForm({
 	onClose?: () => void;
 	onSave?: (item: Item) => void;
 }) {
+	const confirm = useConfirm();
 	const currency = getCurrency();
 	const router = useRouter();
 	const params = useSearchParams();
@@ -41,6 +47,12 @@ export default function ItemForm({
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
+	// Inline add UI state
+	const [showAddCategory, setShowAddCategory] = useState(false);
+	const [newCategoryName, setNewCategoryName] = useState("");
+	const [showAddSupplier, setShowAddSupplier] = useState(false);
+	const [newSupplierName, setNewSupplierName] = useState("");
+
 	useEffect(() => {
 		setCategories(getCategories());
 		setSuppliers(getSuppliers());
@@ -58,6 +70,64 @@ export default function ItemForm({
 			}
 		}
 	}, [id, isEditing]);
+
+	const createCategoryInline = (label: string) => {
+		const trimmed = label.trim();
+		if (!trimmed) return;
+		try {
+			const created = addCategory({ name: trimmed, description: "" });
+			// refresh list and select new
+			const updated = getCategories();
+			setCategories(updated);
+			if (created?.id) setCategoryId(created.id);
+		} catch {
+			// fallback: refresh categories anyway
+			setCategories(getCategories());
+		}
+		setNewCategoryName("");
+		setShowAddCategory(false);
+	};
+
+	const createSupplierInline = (label: string) => {
+		const trimmed = label.trim();
+		if (!trimmed) return;
+		try {
+			const created = addSupplier({
+				name: trimmed,
+				contact: "",
+				email: "",
+				phone: "",
+			});
+			const updated = getSuppliers();
+			setSuppliers(updated);
+			if (created?.id) setSupplierId(created.id);
+		} catch {
+			setSuppliers(getSuppliers());
+		}
+		setNewSupplierName("");
+		setShowAddSupplier(false);
+	};
+
+	// handlers when modal forms finish saving
+	const onCategoryModalSaved = () => {
+		const updated = getCategories();
+		setCategories(updated);
+		// auto-select the most recently added category
+		if (updated.length > 0) {
+			setCategoryId(updated[updated.length - 1].id);
+		}
+		setShowAddCategory(false);
+	};
+
+	const onSupplierModalSaved = () => {
+		const updated = getSuppliers();
+		setSuppliers(updated);
+		// auto-select the most recently added supplier
+		if (updated.length > 0) {
+			setSupplierId(updated[updated.length - 1].id);
+		}
+		setShowAddSupplier(false);
+	};
 
 	const computeStatus = (qty: number) => {
 		try {
@@ -82,7 +152,7 @@ export default function ItemForm({
 		}
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		const status = computeStatus(Number(quantity));
@@ -121,6 +191,17 @@ export default function ItemForm({
 				status,
 				updated_at: new Date().toISOString(),
 			};
+			const ok = await confirm({
+				title: "Update Item",
+				description:
+					"Are you sure you want to update this item? This cannot be undone.",
+				confirmText: "Update",
+				cancelText: "Cancel",
+				variant: "default",
+			});
+
+			if (!ok) return;
+
 			updateItem(updated);
 
 			try {
@@ -205,23 +286,50 @@ export default function ItemForm({
 							>
 								Category
 							</label>
-							<select
-								id="category"
-								value={categoryId}
-								onChange={(e) => setCategoryId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
-								required
-							>
-								<option value="">Select Category</option>
-								{categories.map((category) => (
-									<option
-										key={category.id}
-										value={category.id}
+							<div className="mt-1 flex gap-2 items-center">
+								<select
+									id="category"
+									value={categoryId}
+									onChange={(e) =>
+										setCategoryId(e.target.value)
+									}
+									className="block w-full border border-gray-300 dark:border-gray-800 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-[#2A2A3B] text-gray-900 dark:text-gray-100"
+									required
+								>
+									<option value="">Select Category</option>
+									{categories.map((category) => (
+										<option
+											key={category.id}
+											value={category.id}
+										>
+											{category.name}
+										</option>
+									))}
+								</select>
+								{/* open category modal */}
+								<button
+									type="button"
+									onClick={() => setShowAddCategory(true)}
+									className="px-2 py-1 rounded-md border text-sm bg-gray-50 dark:bg-[#2A2A3B] text-gray-700 dark:text-gray-200"
+								>
+									Add
+								</button>
+							</div>
+
+							{/* prompt when none exist */}
+							{categories.length === 0 && !showAddCategory && (
+								<div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+									No categories yet.{" "}
+									<button
+										type="button"
+										onClick={() => setShowAddCategory(true)}
+										className="underline text-blue-600 dark:text-blue-300"
 									>
-										{category.name}
-									</option>
-								))}
-							</select>
+										Add a category
+									</button>{" "}
+									to continue.
+								</div>
+							)}
 						</div>
 
 						{/* Quantity */}
@@ -244,7 +352,6 @@ export default function ItemForm({
 								required
 							/>
 						</div>
-
 						{/* Location */}
 						<div>
 							<label
@@ -272,23 +379,50 @@ export default function ItemForm({
 							>
 								Supplier
 							</label>
-							<select
-								id="supplier"
-								value={supplierId}
-								onChange={(e) => setSupplierId(e.target.value)}
-								className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-[#2A2A3B] dark:border-gray-800 dark:text-gray-100 bg-white text-gray-900"
-								required
-							>
-								<option value="">Select Supplier</option>
-								{suppliers.map((supplier) => (
-									<option
-										key={supplier.id}
-										value={supplier.id}
+							<div className="mt-1 flex gap-2 items-center">
+								<select
+									id="supplier"
+									value={supplierId}
+									onChange={(e) =>
+										setSupplierId(e.target.value)
+									}
+									className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-[#2A2A3B] dark:border-gray-800 dark:text-gray-100 bg-white text-gray-900"
+									required
+								>
+									<option value="">Select Supplier</option>
+									{suppliers.map((supplier) => (
+										<option
+											key={supplier.id}
+											value={supplier.id}
+										>
+											{supplier.name}
+										</option>
+									))}
+								</select>
+								{/* open supplier modal */}
+								<button
+									type="button"
+									onClick={() => setShowAddSupplier(true)}
+									className="px-2 py-1 rounded-md border text-sm bg-gray-50 dark:bg-[#2A2A3B] text-gray-700 dark:text-gray-200"
+								>
+									Add
+								</button>
+							</div>
+
+							{/* prompt when none exist */}
+							{suppliers.length === 0 && !showAddSupplier && (
+								<div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+									No suppliers yet.{" "}
+									<button
+										type="button"
+										onClick={() => setShowAddSupplier(true)}
+										className="underline text-blue-600 dark:text-blue-300"
 									>
-										{supplier.name}
-									</option>
-								))}
-							</select>
+										Add a supplier
+									</button>{" "}
+									to continue.
+								</div>
+							)}
 						</div>
 
 						{/* Purchase Date */}
@@ -352,6 +486,24 @@ export default function ItemForm({
 					</div>
 				</form>
 			</div>
+
+			{/* Category modal */}
+			{showAddCategory && (
+				<CategoriesForm
+					editingCategory={null}
+					onClose={() => setShowAddCategory(false)}
+					onSaved={onCategoryModalSaved}
+				/>
+			)}
+
+			{/* Supplier modal */}
+			{showAddSupplier && (
+				<SupplierForm
+					editingSupplier={null}
+					onClose={() => setShowAddSupplier(false)}
+					onSaved={onSupplierModalSaved}
+				/>
+			)}
 		</div>
 	);
 }
