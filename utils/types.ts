@@ -60,3 +60,15 @@ export interface HistoryRecord {
 	performedBy: string;
 	timestamp: string;
 }
+
+export interface NotificationRecord {
+	id: string;
+	type: "borrow" | "return" | "overdue" | "low_stock";
+	title: string;
+	message: string;
+	isRead: boolean;
+	entityId?: string;
+	entityType?: "item" | "borrow";
+	createdBy: string;
+	timestamp: string;
+}

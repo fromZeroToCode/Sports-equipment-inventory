@@ -5,6 +5,7 @@ import {
 	Settings,
 	BorrowRecord,
 	HistoryRecord,
+	NotificationRecord,
 } from "@/utils/types";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -380,6 +381,17 @@ export const addBorrow = (
 			details: `Borrowed ${borrow.quantityBorrowed} units by ${borrow.borrowerName}`,
 			performedBy: currentUser?.username || "Unknown",
 		});
+
+		// Add notification
+		addNotification({
+			type: "borrow",
+			title: "Item Borrowed",
+			message: `${borrow.borrowerName} borrowed ${borrow.quantityBorrowed} units of ${item.name}`,
+			isRead: false,
+			entityId: newBorrow.id,
+			entityType: "borrow",
+			createdBy: currentUser?.username || "Unknown",
+		});
 	}
 
 	return newBorrow;
@@ -429,6 +441,17 @@ export const returnBorrow = (
 			details: `Returned ${borrow.quantityBorrowed} units by ${borrow.borrowerName}`,
 			performedBy: currentUser?.username || "Unknown",
 		});
+
+		// Add notification
+		addNotification({
+			type: "return",
+			title: "Item Returned",
+			message: `${borrow.borrowerName} returned ${borrow.quantityBorrowed} units of ${item.name}`,
+			isRead: false,
+			entityId: borrowId,
+			entityType: "borrow",
+			createdBy: currentUser?.username || "Unknown",
+		});
 	}
 
 	return true;
@@ -438,4 +461,51 @@ export const returnBorrow = (
 export const getHistoryByEntity = (entityId: string): HistoryRecord[] => {
 	const history = getHistory();
 	return history.filter((record) => record.entityId === entityId);
+};
+
+// Notification functions
+export const getNotifications = (): NotificationRecord[] => {
+	return getFromStorage<NotificationRecord[]>(KEYS.notifications, []);
+};
+
+export const addNotification = (
+	notification: Omit<NotificationRecord, "id" | "timestamp">
+): NotificationRecord => {
+	const newNotification: NotificationRecord = {
+		...notification,
+		id: uuidv4(),
+		timestamp: new Date().toISOString(),
+	};
+	const notifications = getNotifications();
+	const updatedNotifications = [newNotification, ...notifications];
+	saveToStorage(KEYS.notifications, updatedNotifications);
+	return newNotification;
+};
+
+export const markNotificationAsRead = (id: string): void => {
+	const notifications = getNotifications();
+	const updatedNotifications = notifications.map((n) =>
+		n.id === id ? { ...n, isRead: true } : n
+	);
+	saveToStorage(KEYS.notifications, updatedNotifications);
+};
+
+export const markAllNotificationsAsRead = (): void => {
+	const notifications = getNotifications();
+	const updatedNotifications = notifications.map((n) => ({
+		...n,
+		isRead: true,
+	}));
+	saveToStorage(KEYS.notifications, updatedNotifications);
+};
+
+export const deleteNotification = (id: string): void => {
+	const notifications = getNotifications();
+	const updatedNotifications = notifications.filter((n) => n.id !== id);
+	saveToStorage(KEYS.notifications, updatedNotifications);
+};
+
+export const getUnreadNotificationsCount = (): number => {
+	const notifications = getNotifications();
+	return notifications.filter((n) => !n.isRead).length;
 };

@@ -14,6 +14,7 @@ import {
 	History,
 	Settings,
 	Lock,
+	Bell,
 } from "lucide-react";
 import { logoutUser } from "@/lib/dashboard";
 import { toastError, toastSuccess } from "@/hooks/useToast";
@@ -29,6 +30,8 @@ import BorrowComponent from "@/components/dashboard/borrowComponent";
 import ReportsComponent from "@/components/dashboard/reportsComponent";
 import HistoryComponent from "@/components/dashboard/historyComponent";
 import SettingsComponent from "@/components/dashboard/settingsComponent";
+import NotificationComponent from "@/components/dashboard/notificationComponent";
+import { getUnreadNotificationsCount } from "@/utils/manipulateData";
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
 	admin: [
@@ -39,6 +42,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 		"borrows",
 		"reports",
 		"history",
+		"notifications",
 		"settings",
 	],
 	staff: ["dashboard", "items", "categories", "suppliers", "borrows"],
@@ -60,6 +64,7 @@ const TAB_MAP: Record<string, string> = {
 	borrows: "Borrows",
 	reports: "Reports",
 	history: "History",
+	notifications: "Notifications",
 	settings: "Settings",
 };
 
@@ -82,6 +87,7 @@ export default function DashboardClient() {
 
 	const [currentRole, setCurrentRole] = useState<string>("guest");
 	const [isDarkMode, setIsDarkMode] = useState(false);
+	const [unreadCount, setUnreadCount] = useState(0);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -122,11 +128,30 @@ export default function DashboardClient() {
 		return () => observer.disconnect();
 	}, []);
 
+	// Load unread notifications count
+	useEffect(() => {
+		const updateUnreadCount = () => {
+			setUnreadCount(getUnreadNotificationsCount());
+		};
+
+		updateUnreadCount();
+
+		// Update count every 30 seconds
+		const interval = setInterval(updateUnreadCount, 30000);
+
+		return () => clearInterval(interval);
+	}, [activeTab]); // Refresh when tab changes
+
 	const navItems = [
 		{
 			name: "Dashboard",
 			value: "dashboard",
 			icon: <Home className="h-5 w-5" />,
+		},
+		{
+			name: "Items",
+			value: "items",
+			icon: <Package className="h-5 w-5" />,
 		},
 		{
 			name: "Suppliers",
@@ -137,11 +162,6 @@ export default function DashboardClient() {
 			name: "Categories",
 			value: "categories",
 			icon: <Tag className="h-5 w-5" />,
-		},
-		{
-			name: "Items",
-			value: "items",
-			icon: <Package className="h-5 w-5" />,
 		},
 		{
 			name: "Borrows",
@@ -157,6 +177,11 @@ export default function DashboardClient() {
 			name: "History",
 			value: "history",
 			icon: <History className="h-5 w-5" />,
+		},
+		{
+			name: "Notifications",
+			value: "notifications",
+			icon: <Bell className="h-5 w-5" />,
 		},
 		{
 			name: "Settings",
@@ -246,6 +271,8 @@ export default function DashboardClient() {
 				return <ReportsComponent />;
 			case "history":
 				return <HistoryComponent isDarkMode={isDarkMode} />;
+			case "notifications":
+				return <NotificationComponent isDarkMode={isDarkMode} />;
 			case "settings":
 				return <SettingsComponent />;
 			default:
@@ -306,43 +333,60 @@ export default function DashboardClient() {
 				<div className="flex-1 flex flex-col overflow-y-auto">
 					<nav className="flex-1 px-2 py-4">
 						<ul className="space-y-1">
-							{navItems.map((item) => {
-								const allowed =
-									ROLE_PERMISSIONS[currentRole]?.includes(
-										item.value
-									) ?? false;
-								return (
-									<li key={item.name}>
-										<button
-											onClick={() =>
-												handleTabClick(item.value)
-											}
-											disabled={!allowed}
-											className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md transition-colors ${
-												activeTab === item.value
-													? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
-													: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-											} ${
-												!allowed
-													? "opacity-50 cursor-not-allowed"
-													: ""
-											}`}
-										>
-											<span className="mr-3">
-												{item.icon}
-											</span>
-											<span className="flex-1">
-												{item.name}
-											</span>
-											{!allowed && (
-												<span title="Locked">
-													<Lock className="h-4 w-4 text-gray-400" />
+							{navItems
+								.filter((item) =>
+									(
+										ROLE_PERMISSIONS[currentRole] ?? []
+									).includes(item.value)
+								)
+								.map((item) => {
+									const allowed =
+										ROLE_PERMISSIONS[currentRole]?.includes(
+											item.value
+										) ?? false;
+									return (
+										<li key={item.name}>
+											<button
+												onClick={() =>
+													handleTabClick(item.value)
+												}
+												disabled={!allowed}
+												className={`w-full flex items-center px-4 py-2 text-sm font-medium text-left rounded-md transition-colors ${
+													activeTab === item.value
+														? "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
+														: "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+												} ${
+													!allowed
+														? "opacity-50 cursor-not-allowed"
+														: ""
+												}`}
+											>
+												<span className="mr-3">
+													{item.icon}
 												</span>
-											)}
-										</button>
-									</li>
-								);
-							})}
+												<span className="flex-1">
+													{item.name}
+												</span>
+												{!allowed && (
+													<span title="Locked">
+														<Lock className="h-4 w-4 text-gray-400" />
+													</span>
+												)}
+											</button>
+										</li>
+									);
+								})}
+							<li>
+								<button
+									onClick={handleLogout}
+									className="w-full flex items-center px-4 py-2 text-sm font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+								>
+									<span className="mr-3">
+										<LogOut className="h-5 w-5" />
+									</span>
+									<span>Log out</span>
+								</button>
+							</li>
 						</ul>
 					</nav>
 				</div>
@@ -368,6 +412,24 @@ export default function DashboardClient() {
 
 						<div className="flex items-center">
 							<div className="flex items-center mr-4">
+								{/* Notification Bell */}
+								<button
+									onClick={() =>
+										handleTabClick("notifications")
+									}
+									className="relative p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mr-2"
+									aria-label="Notifications"
+								>
+									<Bell className="h-5 w-5" />
+									{unreadCount > 0 && (
+										<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+											{unreadCount > 9
+												? "9+"
+												: unreadCount}
+										</span>
+									)}
+								</button>
+
 								<div className="mr-4 flex items-center ">
 									<DarkModeButton />
 								</div>
@@ -389,7 +451,6 @@ export default function DashboardClient() {
 										<span className="ml-2 hidden sm:inline-block text-sm font-semibold text-gray-700 dark:text-gray-300">
 											{currentUserName || currentRole}
 										</span>
-										
 									</div>
 
 									{avatarMenuOpen && (

@@ -8,6 +8,7 @@ const KEYS = {
 	settings: "settings",
 	borrows: "borrows",
 	history: "history",
+	notifications: "notifications",
 };
 
 const isBrowser = () =>
@@ -68,6 +69,7 @@ export const clearAllData = (): void => {
 		localStorage.removeItem(KEYS.settings);
 		localStorage.removeItem(KEYS.borrows);
 		localStorage.removeItem(KEYS.history);
+		localStorage.removeItem(KEYS.notifications);
 	} catch (e) {
 		toastError(
 			"Error clearing data",
