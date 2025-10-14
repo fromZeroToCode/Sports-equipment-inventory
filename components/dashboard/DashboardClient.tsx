@@ -31,7 +31,14 @@ import ReportsComponent from "@/components/dashboard/reportsComponent";
 import HistoryComponent from "@/components/dashboard/historyComponent";
 import SettingsComponent from "@/components/dashboard/settingsComponent";
 import NotificationComponent from "@/components/dashboard/notificationComponent";
-import { getUnreadNotificationsCount } from "@/utils/manipulateData";
+import {
+	getUnreadNotificationsCount,
+	checkAndCreateOverdueNotifications,
+	getRecentNotifications,
+	markNotificationAsRead,
+	getNotifications,
+} from "@/utils/manipulateData";
+import { NotificationRecord } from "@/utils/types";
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
 	admin: [
@@ -88,6 +95,28 @@ export default function DashboardClient() {
 	const [currentRole, setCurrentRole] = useState<string>("guest");
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [unreadCount, setUnreadCount] = useState(0);
+	const [showNotificationDropdown, setShowNotificationDropdown] =
+		useState(false);
+	const [recentNotifications, setRecentNotifications] = useState<
+		NotificationRecord[]
+	>([]);
+	const notificationDropdownRef = useRef<HTMLDivElement>(null);
+
+	// Format date helper function
+	const formatDate = (dateString: string) => {
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffMs = now.getTime() - date.getTime();
+		const diffMins = Math.floor(diffMs / 60000);
+		const diffHours = Math.floor(diffMs / 3600000);
+		const diffDays = Math.floor(diffMs / 86400000);
+
+		if (diffMins < 1) return "Just now";
+		if (diffMins < 60) return `${diffMins}m ago`;
+		if (diffHours < 24) return `${diffHours}h ago`;
+		if (diffDays < 7) return `${diffDays}d ago`;
+		return date.toLocaleDateString();
+	};
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -128,16 +157,21 @@ export default function DashboardClient() {
 		return () => observer.disconnect();
 	}, []);
 
-	// Load unread notifications count
+	// Load unread notifications count and check for overdue items
 	useEffect(() => {
-		const updateUnreadCount = () => {
+		const updateNotifications = () => {
+			// Check for overdue items and create notifications
+			checkAndCreateOverdueNotifications();
+			// Update unread count
 			setUnreadCount(getUnreadNotificationsCount());
+			// Update recent notifications
+			setRecentNotifications(getRecentNotifications());
 		};
 
-		updateUnreadCount();
+		updateNotifications();
 
-		// Update count every 30 seconds
-		const interval = setInterval(updateUnreadCount, 30000);
+		// Update notifications every 30 seconds
+		const interval = setInterval(updateNotifications, 30000);
 
 		return () => clearInterval(interval);
 	}, [activeTab]); // Refresh when tab changes
@@ -245,6 +279,21 @@ export default function DashboardClient() {
 		document.addEventListener("click", onDocClick);
 		return () => document.removeEventListener("click", onDocClick);
 	}, [avatarMenuOpen]);
+
+	// close notification dropdown when clicking outside
+	useEffect(() => {
+		function onDocClick(e: MouseEvent) {
+			if (
+				showNotificationDropdown &&
+				notificationDropdownRef.current &&
+				!notificationDropdownRef.current.contains(e.target as Node)
+			) {
+				setShowNotificationDropdown(false);
+			}
+		}
+		document.addEventListener("click", onDocClick);
+		return () => document.removeEventListener("click", onDocClick);
+	}, [showNotificationDropdown]);
 
 	useEffect(() => {
 		if (typeof window !== "undefined" && searchParams) {
@@ -413,22 +462,144 @@ export default function DashboardClient() {
 						<div className="flex items-center">
 							<div className="flex items-center mr-4">
 								{/* Notification Bell */}
-								<button
-									onClick={() =>
-										handleTabClick("notifications")
-									}
-									className="relative p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mr-2"
-									aria-label="Notifications"
-								>
-									<Bell className="h-5 w-5" />
-									{unreadCount > 0 && (
-										<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-											{unreadCount > 9
-												? "9+"
-												: unreadCount}
-										</span>
-									)}
-								</button>
+								{(ROLE_PERMISSIONS[currentRole] ?? []).includes(
+									"notifications"
+								) && (
+									<div
+										className="relative mr-2"
+										ref={notificationDropdownRef}
+									>
+										<button
+											onClick={() =>
+												setShowNotificationDropdown(
+													!showNotificationDropdown
+												)
+											}
+											className="relative p-2 text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+											aria-label="Notifications"
+										>
+											<Bell className="h-5 w-5" />
+											{unreadCount > 0 && (
+												<span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+													{unreadCount > 9
+														? "9+"
+														: unreadCount}
+												</span>
+											)}
+										</button>
+										{showNotificationDropdown && (
+											<div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50">
+												<div className="p-4 border-b border-gray-200 dark:border-gray-600">
+													<h3 className="font-semibold text-gray-900 dark:text-white">
+														Recent Notifications
+													</h3>
+												</div>
+												<div className="max-h-64 overflow-y-auto">
+													{recentNotifications.length >
+													0 ? (
+														recentNotifications.map(
+															(notification) => (
+																<div
+																	key={
+																		notification.id
+																	}
+																	className={`p-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+																		!notification.isRead
+																			? "bg-blue-50 dark:bg-blue-900/20"
+																			: ""
+																	}`}
+																>
+																	<div className="flex items-start justify-between">
+																		<div className="flex-1">
+																			<div
+																				className={`flex items-center gap-2 mb-1`}
+																			>
+																				<div
+																					className={`w-2 h-2 rounded-full ${
+																						notification.type ===
+																						"borrow"
+																							? "bg-blue-500"
+																							: notification.type ===
+																							  "return"
+																							? "bg-green-500"
+																							: notification.type ===
+																							  "overdue"
+																							? "bg-red-500"
+																							: "bg-yellow-500"
+																					}`}
+																				></div>
+																				<p className="text-sm font-medium text-gray-900 dark:text-white">
+																					{
+																						notification.title
+																					}
+																				</p>
+																			</div>
+																			<p className="text-xs text-gray-600 dark:text-gray-400">
+																				{
+																					notification.message
+																				}
+																			</p>
+																			<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+																				{formatDate(
+																					notification.timestamp
+																				)}
+																			</p>
+																		</div>
+																		{!notification.isRead && (
+																			<button
+																				onClick={(
+																					e
+																				) => {
+																					e.stopPropagation();
+																					markNotificationAsRead(
+																						notification.id
+																					);
+																					setUnreadCount(
+																						getNotifications().filter(
+																							(
+																								n
+																							) =>
+																								!n.isRead
+																						)
+																							.length
+																					);
+																				}}
+																				className="ml-2 text-blue-500 hover:text-blue-700 text-xs"
+																			>
+																				Mark
+																				as
+																				read
+																			</button>
+																		)}
+																	</div>
+																</div>
+															)
+														)
+													) : (
+														<div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+															No notifications yet
+														</div>
+													)}
+												</div>
+												<div className="p-3 border-t border-gray-200 dark:border-gray-600">
+													<button
+														onClick={() => {
+															handleTabClick(
+																"notifications"
+															);
+															setShowNotificationDropdown(
+																false
+															);
+														}}
+														className="w-full text-blue-500 hover:text-blue-700 text-sm font-medium transition-colors"
+													>
+														View All Notifications
+													</button>
+												</div>
+											</div>
+										)}
+									</div>
+								)}
 
 								<div className="mr-4 flex items-center ">
 									<DarkModeButton />

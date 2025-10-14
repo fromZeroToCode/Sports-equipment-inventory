@@ -400,15 +400,26 @@ export const addBorrow = (
 export const returnBorrow = (
 	borrowId: string,
 	returnNotes?: string
-): boolean => {
+): { success: boolean; error?: string } => {
 	const currentUser = getCurrentUser();
 	const borrows = getBorrows();
 	const borrowIndex = borrows.findIndex((b) => b.id === borrowId);
 
-	if (borrowIndex === -1) return false;
+	if (borrowIndex === -1)
+		return { success: false, error: "Borrow record not found" };
 
 	const borrow = borrows[borrowIndex];
-	if (borrow.status === "returned") return false;
+	if (borrow.status === "returned")
+		return { success: false, error: "Item has already been returned" };
+
+	// Check if the current user is the one who borrowed the item
+	const currentUsername = currentUser?.username || "";
+	if (borrow.borrowedBy !== currentUsername) {
+		return {
+			success: false,
+			error: "Only the person who borrowed this item can return it",
+		};
+	}
 
 	// Update borrow record
 	borrows[borrowIndex] = {
@@ -454,7 +465,7 @@ export const returnBorrow = (
 		});
 	}
 
-	return true;
+	return { success: true };
 };
 
 // Additional history utility function
@@ -508,4 +519,73 @@ export const deleteNotification = (id: string): void => {
 export const getUnreadNotificationsCount = (): number => {
 	const notifications = getNotifications();
 	return notifications.filter((n) => !n.isRead).length;
+};
+
+// Check for overdue borrows and create notifications
+export const checkAndCreateOverdueNotifications = (): void => {
+	const borrows = getBorrows();
+	const currentUser = getCurrentUser();
+	const today = new Date().toISOString().split("T")[0];
+	let hasUpdates = false;
+
+	const updatedBorrows = borrows.map((borrow) => {
+		if (borrow.status === "borrowed") {
+			const expectedReturnDate = new Date(borrow.expectedReturnDate)
+				.toISOString()
+				.split("T")[0];
+
+			// Check if the item is overdue
+			if (expectedReturnDate < today) {
+				hasUpdates = true;
+
+				// Check if we already created an overdue notification for this borrow
+				const existingNotifications = getNotifications();
+				const hasOverdueNotification = existingNotifications.some(
+					(n) => n.type === "overdue" && n.entityId === borrow.id
+				);
+
+				// Create overdue notification if it doesn't exist
+				if (!hasOverdueNotification) {
+					const daysPastDue = Math.floor(
+						(new Date().getTime() -
+							new Date(borrow.expectedReturnDate).getTime()) /
+							(1000 * 60 * 60 * 24)
+					);
+
+					addNotification({
+						type: "overdue",
+						title: "Item Overdue",
+						message: `${borrow.itemName} borrowed by ${borrow.borrowerName} is ${daysPastDue} day(s) overdue`,
+						isRead: false,
+						entityId: borrow.id,
+						entityType: "borrow",
+						createdBy: currentUser?.username || "System",
+					});
+				}
+
+				// Return updated borrow with overdue status
+				return { ...borrow, status: "overdue" as const };
+			}
+		}
+		return borrow;
+	});
+
+	// Save updated borrows if there were changes
+	if (hasUpdates) {
+		saveToStorage(KEYS.borrows, updatedBorrows);
+	}
+};
+
+// Get recent notifications for dropdown (limit to 5)
+export const getRecentNotifications = (
+	limit: number = 5
+): NotificationRecord[] => {
+	const notifications = getNotifications();
+	return notifications.slice(0, limit);
+};
+
+// Get overdue borrows
+export const getOverdueBorrows = (): BorrowRecord[] => {
+	const borrows = getBorrows();
+	return borrows.filter((borrow) => borrow.status === "overdue");
 };

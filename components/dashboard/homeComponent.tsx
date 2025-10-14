@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Plus, List, Tag, Package, Truck } from "lucide-react";
 import RecentItems from "@/components/dashboard/homeDashboard/recentItems";
 import LowStockAlert from "@/components/dashboard/homeDashboard/lowStockAlert";
+import OverdueBorrowsAlert from "@/components/dashboard/homeDashboard/overdueBorrowsAlert";
 import { useRouter } from "next/navigation";
 
 export default function HomeComponent() {
@@ -115,9 +116,10 @@ export default function HomeComponent() {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
 				<RecentItems limit={7} />
 				<LowStockAlert limit={5} />
+				<OverdueBorrowsAlert limit={5} />
 			</div>
 		</div>
 	);

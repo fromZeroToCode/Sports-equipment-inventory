@@ -119,12 +119,12 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 
 		setLoading(true);
 		try {
-			const success = returnBorrow(
+			const result = returnBorrow(
 				returnForm.borrowId,
 				returnForm.returnNotes
 			);
 
-			if (success) {
+			if (result.success) {
 				setReturnForm({
 					borrowId: "",
 					returnNotes: "",
@@ -132,7 +132,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 				loadData();
 				toastSuccess("Item returned successfully!");
 			} else {
-				toastError("Failed to return item");
+				toastError(result.error || "Failed to return item");
 			}
 		} catch (error) {
 			toastError("An error occurred while returning the item");
