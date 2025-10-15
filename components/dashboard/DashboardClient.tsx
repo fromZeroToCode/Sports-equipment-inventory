@@ -360,7 +360,7 @@ export default function DashboardClient() {
 					} lg:translate-x-0`}
 				aria-hidden={!sidebarOpen && true}
 			>
-				<div className="flex items-center h-16 px-4 bg-blue-600 dark:bg-inherit justify-between">
+				<div className="flex items-center h-16 px-4 bg-inherit justify-between">
 					<div className="flex items-center">
 						<Image
 							src="/Sports-equipment-inventory/logo.svg"
@@ -369,7 +369,7 @@ export default function DashboardClient() {
 							height={21}
 							className="p-4"
 						/>
-						<h1 className="text-xl font-bold text-white">
+						<h1 className="text-xl font-bold text-black dark:text-white">
 							GearSync
 						</h1>
 					</div>

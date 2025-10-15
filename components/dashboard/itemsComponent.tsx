@@ -60,7 +60,7 @@ export default function ItemsComponent() {
 	);
 
 	const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
-	const [isInitialized, setIsInitialized] = useState(false); 
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	const sortByCreated = (arr: Item[]) =>
 		arr.slice().sort((a, b) => {
@@ -163,7 +163,9 @@ export default function ItemsComponent() {
 		}
 		// Apply stock filter
 		if (stockFilter) {
-			result = result.filter((item) => item.status === stockFilter);
+			result = result.filter(
+				(item) => computeItemStatus(item) === stockFilter
+			);
 		}
 
 		// keep order according to sortOrder
@@ -244,6 +246,23 @@ export default function ItemsComponent() {
 				return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100";
 			default:
 				return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+		}
+	};
+
+	const computeItemStatus = (item: Item): string => {
+		try {
+			const raw = localStorage.getItem("settings");
+			const settings = raw ? JSON.parse(raw) : null;
+			const threshold = Number(settings?.lowStockThreshold ?? 5);
+
+			if ((item.quantity ?? 0) <= 0) return "Out of Stock";
+			if ((item.quantity ?? 0) <= threshold) return "Low Stock";
+			return "In Stock";
+		} catch {
+			// fallback to default thresholds
+			if ((item.quantity ?? 0) <= 0) return "Out of Stock";
+			if ((item.quantity ?? 0) <= 5) return "Low Stock";
+			return "In Stock";
 		}
 	};
 
@@ -477,13 +496,19 @@ export default function ItemsComponent() {
 											{getSupplierName(item.supplierId)}
 										</td>
 										<td className="px-6 py-4 ">
-											<span
-												className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
-													item.status
-												)}`}
-											>
-												{item.status}
-											</span>
+											{(() => {
+												const status =
+													computeItemStatus(item);
+												return (
+													<span
+														className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(
+															status
+														)}`}
+													>
+														{status}
+													</span>
+												);
+											})()}
 										</td>
 										<td className="px-6 py-4  text-sm font-medium">
 											<div className="flex space-x-2">

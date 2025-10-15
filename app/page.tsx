@@ -19,6 +19,7 @@ export default function login() {
 			{ id: 2, username: "coach", password: "coach123", role: "coach" },
 			{ id: 3, username: "staff", password: "staff123", role: "staff" },
 		];
+
 		try {
 			const raw = localStorage.getItem("roleAccess");
 			let roles = raw ? JSON.parse(raw) : null;
@@ -31,20 +32,13 @@ export default function login() {
 				return;
 			}
 
-			let changed = false;
-			for (const req of defaultRoles) {
-				if (!roles.some((r: any) => r.role === req.role)) {
-					const maxId = roles.reduce(
-						(acc: number, r: any) =>
-							Math.max(acc, Number(r.id) || 0),
-						0
-					);
-					roles.push({ ...req, id: maxId + 1 });
-					changed = true;
-				}
-			}
-
-			if (changed) {
+			const hasAdmin = roles.some((r: any) => r.role === "admin");
+			if (!hasAdmin) {
+				const maxId = roles.reduce(
+					(acc: number, r: any) => Math.max(acc, Number(r.id) || 0),
+					0
+				);
+				roles.push({ ...defaultRoles[0], id: maxId + 1 });
 				localStorage.setItem("roleAccess", JSON.stringify(roles));
 			}
 		} catch (err) {
@@ -153,7 +147,7 @@ export default function login() {
 			<div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 				<div className="hidden lg:flex items-center justify-center p-12 text-white dark:text-gray-200 dark:bg-[#1d1d28] bg-blue-600 ">
 					<div className="max-w-lg">
-						<h2 className="text-5xl font-serif leading-tight">
+						<h2 className="text-5xl  leading-tight">
 							Equipped for
 							<br />
 							Victory.
@@ -183,7 +177,7 @@ export default function login() {
 							</header>
 
 							<div className="min-w-0 mb-6">
-								<h1 className="text-3xl sm:text-4xl font-serif font-semibold leading-tight text-gray-900 dark:text-white">
+								<h1 className="text-3xl sm:text-4xl font-semibold leading-tight text-gray-900 dark:text-white">
 									Sign in
 								</h1>
 								<p className="mt-2 text-sm text-gray-600 dark:text-gray-300 max-w-xl">
