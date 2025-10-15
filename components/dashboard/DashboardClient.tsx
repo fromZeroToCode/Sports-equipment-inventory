@@ -53,7 +53,14 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
 		"settings",
 	],
 	staff: ["dashboard", "items", "categories", "suppliers", "borrows"],
-	coach: ["dashboard", "items", "categories", "suppliers", "borrows"],
+	coach: [
+		"dashboard",
+		"items",
+		"categories",
+		"suppliers",
+		"borrows",
+		"reports",
+	],
 };
 
 import Image from "next/image";
