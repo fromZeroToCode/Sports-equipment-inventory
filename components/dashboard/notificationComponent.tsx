@@ -50,6 +50,18 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
 
 	useEffect(() => {
 		loadNotifications();
+		function onNotificationsChanged() {
+			loadNotifications();
+		}
+		window.addEventListener(
+			"notifications:changed",
+			onNotificationsChanged
+		);
+		return () =>
+			window.removeEventListener(
+				"notifications:changed",
+				onNotificationsChanged
+			);
 	}, []);
 
 	// Reset page when filteredNotifications changes

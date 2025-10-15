@@ -9,6 +9,7 @@ import {
 	returnBorrow,
 } from "@/utils/manipulateData";
 import { toastSuccess, toastError } from "@/hooks/useToast";
+import { isBorrowOverdue, getOverdueStatusText } from "@/utils/borrowHelpers";
 
 interface BorrowComponentProps {
 	isDarkMode: boolean;
@@ -696,11 +697,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 														i.id === borrow.itemId
 												);
 												const isOverdue =
-													new Date(
-														borrow.expectedReturnDate
-													) < new Date() &&
-													borrow.status ===
-														"borrowed";
+													isBorrowOverdue(borrow);
 
 												return (
 													<tr
@@ -767,9 +764,9 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 																		: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
 																}`}
 															>
-																{isOverdue
-																	? "Overdue"
-																	: borrow.status}
+																{getOverdueStatusText(
+																	borrow
+																)}
 															</span>
 														</td>
 														<td className="py-3 px-4">

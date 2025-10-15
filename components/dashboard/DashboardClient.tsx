@@ -138,7 +138,12 @@ export default function DashboardClient() {
 		}
 	}, []);
 
-	// Dark mode detection
+	const refreshNotifications = () => {
+		checkAndCreateOverdueNotifications();
+		setUnreadCount(getUnreadNotificationsCount());
+		setRecentNotifications(getRecentNotifications());
+	};
+
 	useEffect(() => {
 		const updateDarkMode = () => {
 			setIsDarkMode(document.documentElement.classList.contains("dark"));
@@ -157,24 +162,18 @@ export default function DashboardClient() {
 		return () => observer.disconnect();
 	}, []);
 
-	// Load unread notifications count and check for overdue items
 	useEffect(() => {
-		const updateNotifications = () => {
-			// Check for overdue items and create notifications
-			checkAndCreateOverdueNotifications();
-			// Update unread count
-			setUnreadCount(getUnreadNotificationsCount());
-			// Update recent notifications
-			setRecentNotifications(getRecentNotifications());
+		refreshNotifications();
+		const interval = setInterval(refreshNotifications, 30000);
+
+		const onChanged = () => refreshNotifications();
+		window.addEventListener("notifications:changed", onChanged);
+
+		return () => {
+			clearInterval(interval);
+			window.removeEventListener("notifications:changed", onChanged);
 		};
-
-		updateNotifications();
-
-		// Update notifications every 30 seconds
-		const interval = setInterval(updateNotifications, 30000);
-
-		return () => clearInterval(interval);
-	}, [activeTab]); // Refresh when tab changes
+	}, [activeTab]);
 
 	const navItems = [
 		{
