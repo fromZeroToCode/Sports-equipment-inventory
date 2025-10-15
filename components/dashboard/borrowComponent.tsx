@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import { Item, BorrowRecord } from "@/utils/types";
 import {
 	getItems,
@@ -22,6 +22,21 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 		"borrow"
 	);
 	const [loading, setLoading] = useState(false);
+	const [currentUserId, setCurrentUserId] = useState<string>("current_user");
+
+	const userActiveBorrows = borrows
+		.filter((b) => b.status === "borrowed" || b.status === "overdue")
+		.filter((b) => b.borrowedBy === currentUserId);
+
+	useEffect(() => {
+		try {
+			const raw = localStorage.getItem("currentUser");
+			const user = raw ? JSON.parse(raw) : null;
+			setCurrentUserId(user?.id ?? user?.username ?? "current_user");
+		} catch {
+			setCurrentUserId("current_user");
+		}
+	}, []);
 
 	// Borrow form state
 	const [borrowForm, setBorrowForm] = useState({
@@ -146,6 +161,10 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 		return new Date(dateString).toLocaleDateString();
 	};
 
+	const returnedByUser = borrows
+		.filter((b) => b.status === "returned")
+		.filter((b) => b.borrowedBy === currentUserId);
+
 	return (
 		<div>
 			<h1 className="text-2xl font-bold text-[#1d1d28]  dark:text-gray-100 mb-6">
@@ -198,9 +217,13 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 				</div>
 			</div>
 			<div
-				className={`p-2 rounded-xl ${
-					isDarkMode
-						? "bg-[#1d1d28]  text-white"
+				className={`p-2 rounded-xl w-full ${
+					activeTab === "return"
+						? isDarkMode
+							? "text-white hidden"
+							: "text-gray-900 hidden"
+						: isDarkMode
+						? "bg-[#1d1d28] text-white"
 						: "bg-white text-gray-900"
 				}`}
 			>
@@ -437,97 +460,6 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 					</div>
 				)}
 
-				{/* Return Tab */}
-				{activeTab === "return" && (
-					<div
-						className={`rounded-lg border p-6 ${
-							isDarkMode
-								? "border-none bg-[#1d1d28] "
-								: "border-gray-300 bg-gray-50"
-						}`}
-					>
-						<h3 className="text-xl font-semibold mb-4">
-							Return Equipment
-						</h3>
-						<form onSubmit={handleReturn} className="space-y-4">
-							{/* Borrow Selection */}
-							<div>
-								<label
-									className={`block text-sm font-medium mb-2 ${
-										isDarkMode
-											? "text-gray-300"
-											: "text-gray-700"
-									}`}
-								>
-									Select Borrow Record *
-								</label>
-								<select
-									value={returnForm.borrowId}
-									onChange={(e) =>
-										setReturnForm({
-											...returnForm,
-											borrowId: e.target.value,
-										})
-									}
-									className={`w-full px-3 py-2 rounded-md border ${
-										isDarkMode
-											? "bg-[#2A2A3B] border-gray-800 text-white"
-											: "bg-white border-gray-300 text-gray-900"
-									} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-									required
-								>
-									<option value="">
-										Select a borrow record
-									</option>
-									{activeBorrows.map((borrow) => {
-										const item = items.find(
-											(i) => i.id === borrow.itemId
-										);
-										return (
-											<option
-												key={borrow.id}
-												value={borrow.id}
-											>
-												{item?.name} -{" "}
-												{borrow.borrowerName} (
-												{borrow.quantityBorrowed} units)
-												- Due:{" "}
-												{formatDate(
-													borrow.expectedReturnDate
-												)}
-											</option>
-										);
-									})}
-								</select>
-							</div>
-
-							<button
-								type="submit"
-								disabled={loading || activeBorrows.length === 0}
-								className={`w-full py-2 px-4 rounded-md font-medium transition-colors ${
-									loading || activeBorrows.length === 0
-										? "bg-gray-600 cursor-not-allowed"
-										: "bg-green-500 hover:bg-green-600 text-white"
-								}`}
-							>
-								{loading ? "Processing..." : "Return Item"}
-							</button>
-
-							{activeBorrows.length === 0 && (
-								<p
-									className={`text-center text-sm ${
-										isDarkMode
-											? "text-gray-400"
-											: "text-[#2A2A3B]"
-									}`}
-								>
-									No active borrows to return
-								</p>
-							)}
-						</form>
-					</div>
-				)}
-
 				{/* Active Borrows Tab */}
 				{activeTab === "active" && (
 					<div
@@ -707,23 +639,30 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 															</span>
 														</td>
 														<td className="py-3 px-4">
-															<button
-																onClick={() => {
-																	setReturnForm(
-																		{
-																			...returnForm,
-																			borrowId:
-																				borrow.id,
-																		}
-																	);
-																	setActiveTab(
-																		"return"
-																	);
-																}}
-																className="text-blue-500 hover:text-blue-700 text-sm font-medium"
-															>
-																Return
-															</button>
+															{borrow.borrowedBy ===
+															currentUserId ? (
+																<button
+																	onClick={() => {
+																		setReturnForm(
+																			{
+																				...returnForm,
+																				borrowId:
+																					borrow.id,
+																			}
+																		);
+																		setActiveTab(
+																			"return"
+																		);
+																	}}
+																	className="text-blue-500 hover:text-blue-700 text-sm font-medium"
+																>
+																	Return
+																</button>
+															) : (
+																<span className="text-sm text-gray-400">
+																	—
+																</span>
+															)}
 														</td>
 													</tr>
 												);
@@ -736,6 +675,172 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 					</div>
 				)}
 			</div>
+
+			{/* Return Tab */}
+			{activeTab === "return" && (
+				<div
+					className={`rounded-lg border  flex gap-4 w-full border-none max-sm:flex-col max-sm:space-y-4 `}
+				>
+					<div
+						className={`flex-1 p-6 rounded-xl  ${
+							isDarkMode
+								? "bg-[#1d1d28] text-white"
+								: "bg-white text-gray-900"
+						}`}
+					>
+						<h3 className="text-xl font-semibold mb-4">
+							Return Equipment
+						</h3>
+						<form onSubmit={handleReturn} className="space-y-4">
+							{/* Borrow Selection */}
+							<div>
+								<label
+									className={`block text-sm font-medium mb-2 ${
+										isDarkMode
+											? "text-gray-300"
+											: "text-gray-700"
+									}`}
+								>
+									Select Borrow Record *
+								</label>
+								<select
+									value={returnForm.borrowId}
+									onChange={(e) =>
+										setReturnForm({
+											...returnForm,
+											borrowId: e.target.value,
+										})
+									}
+									className={`w-full px-3 py-2 rounded-md border ${
+										isDarkMode
+											? "bg-[#2A2A3B] border-gray-800 text-white"
+											: "bg-white border-gray-300 text-gray-900"
+									} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+									required
+								>
+									<option value="">
+										Select a borrow record
+									</option>
+									{userActiveBorrows.map((borrow) => {
+										const item = items.find(
+											(i) => i.id === borrow.itemId
+										);
+										return (
+											<option
+												key={borrow.id}
+												value={borrow.id}
+											>
+												{item?.name} -{" "}
+												{borrow.borrowerName} (
+												{borrow.quantityBorrowed} units)
+												- Due:{" "}
+												{formatDate(
+													borrow.expectedReturnDate
+												)}
+											</option>
+										);
+									})}
+								</select>
+							</div>
+
+							<button
+								type="submit"
+								disabled={
+									loading || userActiveBorrows.length === 0
+								}
+								className={`w-full py-2 px-4 rounded-md font-medium transition-colors ${
+									loading || activeBorrows.length === 0
+										? "bg-gray-600 cursor-not-allowed"
+										: "bg-green-500 hover:bg-green-600 text-white"
+								}`}
+							>
+								{loading ? "Processing..." : "Return Item"}
+							</button>
+
+							{userActiveBorrows.length === 0 && (
+								<p
+									className={`text-center text-sm ${
+										isDarkMode
+											? "text-gray-400"
+											: "text-[#2A2A3B]"
+									}`}
+								>
+									No active borrows to return
+								</p>
+							)}
+						</form>
+					</div>
+
+					<div
+						className={`flex-1 p-6 rounded-xl  ${
+							isDarkMode
+								? "bg-[#1d1d28] text-white"
+								: "bg-white text-gray-900"
+						}`}
+					>
+						{/* Returned items card */}
+						<div className={`rounded-lg shadow `}>
+							<div className="flex items-center justify-between mb-2">
+								<h4 className="text-xl font-semibold mb-4">
+									Returned
+								</h4>
+								<span className="text-sm text-gray-500 dark:text-gray-400">
+									{returnedByUser.length}
+								</span>
+							</div>
+							<div className="space-y-2 max-h-40 overflow-y-auto">
+								{returnedByUser.length === 0 ? (
+									<div className="text-sm text-gray-500 dark:text-gray-400">
+										No returned items yet
+									</div>
+								) : (
+									returnedByUser.map((r) => {
+										const item = items.find(
+											(i) => i.id === r.itemId
+										);
+										return (
+											<div
+												key={r.id}
+												className="flex items-center justify-between gap-3"
+											>
+												<div className="min-w-0">
+													<div className="font-medium truncate">
+														{item?.name ??
+															"Unknown Item"}
+													</div>
+													<div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+														{r.quantityBorrowed}{" "}
+														unit
+														{r.quantityBorrowed !==
+														1
+															? "s"
+															: ""}{" "}
+														•{" "}
+														{r.created_at
+															? `Returned: ${formatDate(
+																	r.created_at
+															  )}`
+															: "Returned"}
+													</div>
+												</div>
+
+												{/* optional small date badge on the right */}
+												<div className="flex-shrink-0 text-xs text-gray-500 dark:text-gray-400">
+													{r.created_at
+														? formatDate(
+																r.created_at
+														  )
+														: ""}
+												</div>
+											</div>
+										);
+									})
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
