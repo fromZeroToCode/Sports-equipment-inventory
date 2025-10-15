@@ -15,6 +15,7 @@ import {
 	KEYS,
 } from "@/utils/localStorageManipulation";
 import { toastError, toastSuccess } from "@/hooks/useToast";
+import { isBorrowOverdue, daysPastDue } from "@/utils/borrowHelpers";
 
 export const initializeData = () => {
 	// First check if localStorage is available
@@ -400,15 +401,26 @@ export const addBorrow = (
 export const returnBorrow = (
 	borrowId: string,
 	returnNotes?: string
-): boolean => {
+): { success: boolean; error?: string } => {
 	const currentUser = getCurrentUser();
 	const borrows = getBorrows();
 	const borrowIndex = borrows.findIndex((b) => b.id === borrowId);
 
-	if (borrowIndex === -1) return false;
+	if (borrowIndex === -1)
+		return { success: false, error: "Borrow record not found" };
 
 	const borrow = borrows[borrowIndex];
-	if (borrow.status === "returned") return false;
+	if (borrow.status === "returned")
+		return { success: false, error: "Item has already been returned" };
+
+	// Check if the current user is the one who borrowed the item
+	const currentUsername = currentUser?.username || "";
+	if (borrow.borrowedBy !== currentUsername) {
+		return {
+			success: false,
+			error: "Only the person who borrowed this item can return it",
+		};
+	}
 
 	// Update borrow record
 	borrows[borrowIndex] = {
@@ -454,7 +466,7 @@ export const returnBorrow = (
 		});
 	}
 
-	return true;
+	return { success: true };
 };
 
 // Additional history utility function
@@ -482,30 +494,110 @@ export const addNotification = (
 	return newNotification;
 };
 
-export const markNotificationAsRead = (id: string): void => {
+export function markNotificationAsRead(id: string) {
 	const notifications = getNotifications();
-	const updatedNotifications = notifications.map((n) =>
-		n.id === id ? { ...n, isRead: true } : n
-	);
-	saveToStorage(KEYS.notifications, updatedNotifications);
-};
+	const idx = notifications.findIndex((n) => n.id === id);
+	if (idx === -1) return false;
+	notifications[idx].isRead = true;
+	try {
+		localStorage.setItem("notifications", JSON.stringify(notifications));
+		window.dispatchEvent(new CustomEvent("notifications:changed"));
+	} catch {}
+	return true;
+}
 
-export const markAllNotificationsAsRead = (): void => {
-	const notifications = getNotifications();
-	const updatedNotifications = notifications.map((n) => ({
+export function markAllNotificationsAsRead() {
+	const notifications = getNotifications().map((n) => ({
 		...n,
 		isRead: true,
 	}));
-	saveToStorage(KEYS.notifications, updatedNotifications);
-};
+	try {
+		localStorage.setItem("notifications", JSON.stringify(notifications));
+		window.dispatchEvent(new CustomEvent("notifications:changed"));
+	} catch {}
+	return true;
+}
 
-export const deleteNotification = (id: string): void => {
-	const notifications = getNotifications();
-	const updatedNotifications = notifications.filter((n) => n.id !== id);
-	saveToStorage(KEYS.notifications, updatedNotifications);
-};
+export function deleteNotification(id: string) {
+	let notifications = getNotifications();
+	notifications = notifications.filter((n) => n.id !== id);
+	try {
+		localStorage.setItem("notifications", JSON.stringify(notifications));
+		window.dispatchEvent(new CustomEvent("notifications:changed"));
+	} catch {}
+	return true;
+}
 
 export const getUnreadNotificationsCount = (): number => {
 	const notifications = getNotifications();
 	return notifications.filter((n) => !n.isRead).length;
+};
+
+// Check for overdue borrows and create notifications
+export const checkAndCreateOverdueNotifications = (): void => {
+	const borrows = getBorrows();
+	const currentUser = getCurrentUser();
+	let hasUpdates = false;
+
+	const updatedBorrows = borrows.map((borrow) => {
+		// Check if the item is overdue (for both borrowed and already overdue items)
+		if (
+			(borrow.status === "borrowed" || borrow.status === "overdue") &&
+			isBorrowOverdue(borrow)
+		) {
+			let shouldUpdate = false;
+
+			// Update status if it was borrowed and now overdue
+			if (borrow.status === "borrowed") {
+				hasUpdates = true;
+				shouldUpdate = true;
+			}
+
+			// Check if we already created an overdue notification for this borrow
+			const existingNotifications = getNotifications();
+			const hasOverdueNotification = existingNotifications.some(
+				(n) => n.type === "overdue" && n.entityId === borrow.id
+			);
+
+			// Create overdue notification if it doesn't exist
+			if (!hasOverdueNotification) {
+				const days = daysPastDue(borrow);
+
+				addNotification({
+					type: "overdue",
+					title: "Item Overdue",
+					message: `${borrow.itemName} borrowed by ${borrow.borrowerName} is ${days} day(s) overdue`,
+					isRead: false,
+					entityId: borrow.id,
+					entityType: "borrow",
+					createdBy: currentUser?.username || "System",
+				});
+			}
+
+			// Return updated borrow with overdue status if needed
+			return shouldUpdate
+				? { ...borrow, status: "overdue" as const }
+				: borrow;
+		}
+		return borrow;
+	});
+
+	// Save updated borrows if there were changes
+	if (hasUpdates) {
+		saveToStorage(KEYS.borrows, updatedBorrows);
+	}
+};
+
+// Get recent notifications for dropdown (limit to 5)
+export const getRecentNotifications = (
+	limit: number = 5
+): NotificationRecord[] => {
+	const notifications = getNotifications();
+	return notifications.slice(0, limit);
+};
+
+// Get overdue borrows
+export const getOverdueBorrows = (): BorrowRecord[] => {
+	const borrows = getBorrows();
+	return borrows.filter((borrow) => borrow.status === "overdue");
 };
