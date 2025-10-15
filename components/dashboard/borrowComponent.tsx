@@ -277,7 +277,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 										Quantity *
 									</label>
 									<input
-										type="number"
+										type="text"
 										min="1"
 										max={
 											borrowForm.itemId
@@ -320,6 +320,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 									<input
 										type="text"
 										value={borrowForm.borrowerName}
+										placeholder="John Doe"
 										onChange={(e) =>
 											setBorrowForm({
 												...borrowForm,
@@ -349,6 +350,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 									<input
 										type="email"
 										value={borrowForm.borrowerEmail}
+										placeholder="john.doe@example.com"
 										onChange={(e) =>
 											setBorrowForm({
 												...borrowForm,
@@ -383,6 +385,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 												borrowerPhone: e.target.value,
 											})
 										}
+										placeholder="(123) 456-7890"
 										className={`w-full px-3 py-2 rounded-md border ${
 											isDarkMode
 												? "bg-[#2A2A3B] border-gray-800 text-white"

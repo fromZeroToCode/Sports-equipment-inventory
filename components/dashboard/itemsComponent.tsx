@@ -11,6 +11,7 @@ import {
 	getSuppliers,
 	deleteItem,
 	getCurrency,
+	getBorrows,
 } from "@/utils/manipulateData";
 import ItemForm from "./itemComponentForm/itemForm";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -242,6 +243,8 @@ export default function ItemsComponent() {
 				return "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100";
 			case "Low Stock":
 				return "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100";
+			case "In Use":
+				return "bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100";
 			case "Out of Stock":
 				return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100";
 			default:
@@ -255,13 +258,38 @@ export default function ItemsComponent() {
 			const settings = raw ? JSON.parse(raw) : null;
 			const threshold = Number(settings?.lowStockThreshold ?? 5);
 
-			if ((item.quantity ?? 0) <= 0) return "Out of Stock";
-			if ((item.quantity ?? 0) <= threshold) return "Low Stock";
+			const borrows = getBorrows();
+			const activeBorrowedQty = borrows
+				.filter(
+					(b) =>
+						String(b.itemId) === String(item.id) &&
+						(b.status === "borrowed" || b.status === "overdue")
+				)
+				.reduce(
+					(acc, b) =>
+						acc +
+						Number(
+							(b as any).quantityBorrowed ??
+								(b as any).quantity ??
+								0
+						),
+					0
+				);
+
+			const totalStock = Number(item.quantity ?? 0) || 0;
+			const available = totalStock - activeBorrowedQty;
+
+			if (activeBorrowedQty > 0 && available <= 0) return "In Use";
+
+			if (totalStock <= 0) return "Out of Stock";
+
+			if (available <= threshold) return "Low Stock";
+
 			return "In Stock";
 		} catch {
-			// fallback to default thresholds
-			if ((item.quantity ?? 0) <= 0) return "Out of Stock";
-			if ((item.quantity ?? 0) <= 5) return "Low Stock";
+			const qty = Number(item.quantity ?? 0) || 0;
+			if (qty <= 0) return "Out of Stock";
+			if (qty <= 5) return "Low Stock";
 			return "In Stock";
 		}
 	};
@@ -382,6 +410,7 @@ export default function ItemsComponent() {
 						>
 							<option value="">All Stock Status</option>
 							<option value="In Stock">In Stock</option>
+							<option value="In Use">In Use</option>
 							<option value="Low Stock">Low Stock</option>
 							<option value="Out of Stock">Out of Stock</option>
 						</select>
