@@ -88,7 +88,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 				expectedReturnDate: borrowForm.expectedReturnDate,
 				status: "borrowed" as const,
 				notes: borrowForm.notes,
-				borrowedBy: "current_user", // We'll update this when we have proper user context
+				borrowedBy: "current_user",
 			});
 
 			if (success) {

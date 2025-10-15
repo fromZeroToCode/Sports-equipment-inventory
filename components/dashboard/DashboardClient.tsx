@@ -149,10 +149,8 @@ export default function DashboardClient() {
 			setIsDarkMode(document.documentElement.classList.contains("dark"));
 		};
 
-		// Initial check
 		updateDarkMode();
 
-		// Watch for changes
 		const observer = new MutationObserver(updateDarkMode);
 		observer.observe(document.documentElement, {
 			attributes: true,

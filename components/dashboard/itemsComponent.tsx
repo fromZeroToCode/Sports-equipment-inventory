@@ -60,7 +60,7 @@ export default function ItemsComponent() {
 	);
 
 	const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
-	const [isInitialized, setIsInitialized] = useState(false); // Add this state
+	const [isInitialized, setIsInitialized] = useState(false); 
 
 	const sortByCreated = (arr: Item[]) =>
 		arr.slice().sort((a, b) => {

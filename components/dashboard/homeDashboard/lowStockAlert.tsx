@@ -28,7 +28,6 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 			const thr = Number(settings?.lowStockThreshold ?? threshold);
 			setThreshold(thr);
 
-			// keep all low-stock items (don't prematurely slice to `limit`)
 			const low = inv
 				.filter(
 					(i) => typeof i.quantity === "number" && i.quantity <= thr
