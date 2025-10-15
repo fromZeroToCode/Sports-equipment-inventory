@@ -31,13 +31,11 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 		borrowerPhone: "",
 		quantityBorrowed: 1,
 		expectedReturnDate: "",
-		notes: "",
 	});
 
 	// Return form state
 	const [returnForm, setReturnForm] = useState({
 		borrowId: "",
-		returnNotes: "",
 	});
 
 	// Load data
@@ -87,7 +85,6 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 				borrowDate: new Date().toISOString(),
 				expectedReturnDate: borrowForm.expectedReturnDate,
 				status: "borrowed" as const,
-				notes: borrowForm.notes,
 				borrowedBy: "current_user",
 			});
 
@@ -99,7 +96,6 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 					borrowerPhone: "",
 					quantityBorrowed: 1,
 					expectedReturnDate: "",
-					notes: "",
 				});
 				loadData();
 				toastSuccess("Item borrowed successfully!");
@@ -120,15 +116,11 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 
 		setLoading(true);
 		try {
-			const result = returnBorrow(
-				returnForm.borrowId,
-				returnForm.returnNotes
-			);
+			const result = returnBorrow(returnForm.borrowId);
 
 			if (result.success) {
 				setReturnForm({
 					borrowId: "",
-					returnNotes: "",
 				});
 				loadData();
 				toastSuccess("Item returned successfully!");
@@ -160,7 +152,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 				Borrow Management
 			</h1>
 			<div className="mb-6">
-				<div className="flex space-x-4 mb-6">
+				<div className="flex space-x-4 mb-6 max-sm:flex-col max-sm:space-x-0 max-sm:space-y-2">
 					<button
 						onClick={() => setActiveTab("borrow")}
 						className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -430,35 +422,6 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 								</div>
 							</div>
 
-							{/* Notes */}
-							<div>
-								<label
-									className={`block text-sm font-medium mb-2 ${
-										isDarkMode
-											? "text-gray-300"
-											: "text-gray-700"
-									}`}
-								>
-									Notes
-								</label>
-								<textarea
-									value={borrowForm.notes}
-									onChange={(e) =>
-										setBorrowForm({
-											...borrowForm,
-											notes: e.target.value,
-										})
-									}
-									rows={3}
-									className={`w-full px-3 py-2 rounded-md border ${
-										isDarkMode
-											? "bg-[#2A2A3B] border-gray-800 text-white"
-											: "bg-white border-gray-300 text-gray-900"
-									} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-									placeholder="Additional notes..."
-								/>
-							</div>
-
 							<button
 								type="submit"
 								disabled={loading}
@@ -536,35 +499,6 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 										);
 									})}
 								</select>
-							</div>
-
-							{/* Return Notes */}
-							<div>
-								<label
-									className={`block text-sm font-medium mb-2 ${
-										isDarkMode
-											? "text-gray-300"
-											: "text-gray-700"
-									}`}
-								>
-									Return Notes
-								</label>
-								<textarea
-									value={returnForm.returnNotes}
-									onChange={(e) =>
-										setReturnForm({
-											...returnForm,
-											returnNotes: e.target.value,
-										})
-									}
-									rows={3}
-									className={`w-full px-3 py-2 rounded-md border ${
-										isDarkMode
-											? "bg-[#2A2A3B] border-gray-800 text-white"
-											: "bg-white border-gray-300 text-gray-900"
-									} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-									placeholder="Condition of returned item, any damages, etc..."
-								/>
 							</div>
 
 							<button

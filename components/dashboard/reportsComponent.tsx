@@ -146,11 +146,11 @@ export default function ReportsComponent() {
 						<div className="rounded-full p-3 bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300">
 							<FileText className="h-6 w-6" />
 						</div>
-						<div className="ml-5">
+						<div className="ml-5 min-w-0">
 							<p className="text-sm font-medium text-gray-500 dark:text-gray-400">
 								Total Inventory Value
 							</p>
-							<p className="mt-1 text-3xl font-semibold text-gray-900 dark:text-gray-100">
+							<p className="mt-1 text-3xl font-semibold text-gray-900 dark:text-gray-100 truncate">
 								{currency +
 									totalValue.toLocaleString("en-US", {
 										minimumFractionDigits: 2,

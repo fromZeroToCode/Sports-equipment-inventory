@@ -696,7 +696,7 @@ export default function SettingsComponent() {
 
 			{/* User Management Card */}
 			<div className="bg-white dark:bg-[#1d1d28]  shadow rounded-lg ">
-				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+				<div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col max-sm:items-start gap-2">
 					<h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
 						Account Management
 					</h3>
@@ -706,7 +706,7 @@ export default function SettingsComponent() {
 				</div>
 
 				<div className="p-6 space-y-4">
-					<div className="flex justify-between items-center">
+					<div className="flex justify-between items-center max-sm:flex-col max-sm:items-start gap-2	">
 						<p className="text-sm text-gray-500 dark:text-gray-400">
 							Admins can add/edit/delete accounts. Actions require
 							entering your password for confirmation.

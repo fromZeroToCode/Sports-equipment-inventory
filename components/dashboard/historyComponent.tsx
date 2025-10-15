@@ -641,68 +641,63 @@ const HistoryComponent: React.FC<HistoryComponentProps> = ({ isDarkMode }) => {
 										))}
 									</tbody>
 								</table>
-
-								{/* Pagination controls */}
-								<div className="px-4 py-3 bg-white dark:bg-[#1d1d28] border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
-									<div className="text-sm text-gray-700 dark:text-gray-300">
-										Showing{" "}
-										<span className="font-medium">
-											{filteredHistory.length === 0
-												? 0
-												: (page - 1) * PAGE_SIZE + 1}
-										</span>{" "}
-										to{" "}
-										<span className="font-medium">
-											{Math.min(
-												page * PAGE_SIZE,
-												filteredHistory.length
-											)}
-										</span>{" "}
-										of{" "}
-										<span className="font-medium">
-											{filteredHistory.length}
-										</span>{" "}
-										results
-									</div>
-									<div className="flex items-center space-x-2">
-										<button
-											onClick={() =>
-												setPage((p) =>
-													Math.max(1, p - 1)
-												)
-											}
-											disabled={page === 1}
-											className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-600"
-										>
-											Previous
-										</button>
-
-										<div className="text-sm text-gray-700 dark:text-gray-300">
-											Page{" "}
-											<span className="font-medium">
-												{page}
-											</span>{" "}
-											of{" "}
-											<span className="font-medium">
-												{totalPages}
-											</span>
-										</div>
-
-										<button
-											onClick={() =>
-												setPage((p) =>
-													Math.min(totalPages, p + 1)
-												)
-											}
-											disabled={page === totalPages}
-											className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-600"
-										>
-											Next
-										</button>
-									</div>
-								</div>
 							</div>
 						)}
+						{/* Pagination controls */}
+						<div className="px-4 py-3 bg-white dark:bg-[#1d1d28] border-t border-gray-200 dark:border-gray-700 flex items-center justify-between max-sm:flex-col gap-3">
+							<div className="text-sm text-gray-700 dark:text-gray-300">
+								Showing{" "}
+								<span className="font-medium">
+									{filteredHistory.length === 0
+										? 0
+										: (page - 1) * PAGE_SIZE + 1}
+								</span>{" "}
+								to{" "}
+								<span className="font-medium">
+									{Math.min(
+										page * PAGE_SIZE,
+										filteredHistory.length
+									)}
+								</span>{" "}
+								of{" "}
+								<span className="font-medium">
+									{filteredHistory.length}
+								</span>{" "}
+								results
+							</div>
+							<div className="flex items-center space-x-2">
+								<button
+									onClick={() =>
+										setPage((p) => Math.max(1, p - 1))
+									}
+									disabled={page === 1}
+									className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-600"
+								>
+									Previous
+								</button>
+
+								<div className="text-sm text-gray-700 dark:text-gray-300">
+									Page{" "}
+									<span className="font-medium">{page}</span>{" "}
+									of{" "}
+									<span className="font-medium">
+										{totalPages}
+									</span>
+								</div>
+
+								<button
+									onClick={() =>
+										setPage((p) =>
+											Math.min(totalPages, p + 1)
+										)
+									}
+									disabled={page === totalPages}
+									className="px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-600"
+								>
+									Next
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

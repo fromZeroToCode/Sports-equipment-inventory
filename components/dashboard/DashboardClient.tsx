@@ -91,6 +91,7 @@ export default function DashboardClient() {
 	} catch {
 		searchParams = null;
 	}
+	const sidebarRef = useRef<HTMLDivElement | null>(null);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 	const avatarMenuRef = useRef<HTMLDivElement | null>(null);
@@ -108,6 +109,21 @@ export default function DashboardClient() {
 		NotificationRecord[]
 	>([]);
 	const notificationDropdownRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (!sidebarOpen) return;
+			const target = e.target as HTMLElement;
+			if (sidebarRef.current && sidebarRef.current.contains(target))
+				return;
+			if (target.closest("[data-sidebar-toggle]")) return;
+			setSidebarOpen(false);
+		}
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () =>
+			document.removeEventListener("mousedown", handleClickOutside);
+	}, [sidebarOpen]);
 
 	// Format date helper function
 	const formatDate = (dateString: string) => {
@@ -354,6 +370,7 @@ export default function DashboardClient() {
 		<div className="flex h-screen bg-[#f3f3f3] dark:bg-[#11111d] ">
 			{/* Sidebar */}
 			<aside
+				ref={sidebarRef}
 				className={`fixed inset-y-0 left-0 w-64 bg-white  border-r border-gray-200 dark:bg-[#1d1d28] dark:border-gray-800 transform z-30 transition-transform duration-200 ease-in-out
                     ${
 						sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -374,6 +391,7 @@ export default function DashboardClient() {
 						</h1>
 					</div>
 					<button
+						data-sidebar-toggle
 						type="button"
 						className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
 						onClick={onMenuClick}
@@ -451,6 +469,7 @@ export default function DashboardClient() {
 				<header className="bg-white shadow-sm z-10 dark:bg-[#1d1d28] border-b border-gray-200 dark:border-gray-800">
 					<div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
 						<button
+							data-sidebar-toggle
 							type="button"
 							className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-colors"
 							onClick={onMenuClick}
@@ -492,7 +511,7 @@ export default function DashboardClient() {
 											)}
 										</button>
 										{showNotificationDropdown && (
-											<div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50">
+											<div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-md:fixed max-md:right-0 max-md:left-0 max-md:mx-auto max-md:max-w-full max-md:w-full">
 												<div className="p-4 border-b border-gray-200 dark:border-gray-600">
 													<h3 className="font-semibold text-gray-900 dark:text-white">
 														Recent Notifications
@@ -678,7 +697,10 @@ export default function DashboardClient() {
 			</div>
 
 			{sidebarOpen && (
-				<div className="lg:hidden fixed inset-0 bg-gray-800/50 dark:bg-gray-900/50 w-screen h-screen z-20"></div>
+				<div
+					className="lg:hidden fixed inset-0 bg-gray-800/50 dark:bg-gray-900/50 w-screen h-screen z-20"
+					onClick={() => setSidebarOpen(false)}
+				></div>
 			)}
 
 			{/* button for generating data */}
