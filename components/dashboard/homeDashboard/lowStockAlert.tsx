@@ -3,7 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle } from "lucide-react";
 
-import { Item } from "@/utils/types";
+import { Item as BaseItem } from "@/utils/types";
+import { getBorrows } from "@/utils/manipulateData";
+
+type Item = BaseItem & {
+	__available?: number;
+	__total?: number;
+	__status?: "In Use" | "Out of Stock" | "Low Stock" | "In Stock";
+};
 
 type Settings = {
 	lowStockThreshold?: number;
@@ -28,13 +35,77 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 			const thr = Number(settings?.lowStockThreshold ?? threshold);
 			setThreshold(thr);
 
-			const low = inv
-				.filter(
-					(i) => typeof i.quantity === "number" && i.quantity <= thr
-				)
-				.sort((a, b) => a.quantity - b.quantity);
+			const borrows = getBorrows();
 
-			setItems(low);
+			const low = inv
+				.map((it) => {
+					const activeBorrowedQty = borrows
+						.filter(
+							(b) =>
+								String(b.itemId) === String(it.id) &&
+								(b.status === "borrowed" ||
+									b.status === "overdue")
+						)
+						.reduce(
+							(acc, b) =>
+								acc +
+								Number(
+									(b as any).quantityBorrowed ??
+										(b as any).quantity ??
+										0
+								),
+							0
+						);
+
+					const total = Number(it.quantity ?? 0) || 0;
+					let available = total - activeBorrowedQty;
+
+					if (
+						!Number.isFinite(available) ||
+						Number.isNaN(available)
+					) {
+						available = 0;
+					}
+					// keep negative available as 0 for display
+					if (available < 0) available = 0;
+
+					// compute status same as ItemsComponent
+					let status:
+						| "In Use"
+						| "Out of Stock"
+						| "Low Stock"
+						| "In Stock" = "In Stock";
+					if (
+						activeBorrowedQty > 0 &&
+						total - activeBorrowedQty <= 0
+					) {
+						status = "In Use";
+					} else if (total <= 0) {
+						status = "Out of Stock";
+					} else if (available <= thr) {
+						status = "Low Stock";
+					}
+
+					return {
+						...it,
+						__available: available,
+						__total: total,
+						__status: status,
+					};
+				})
+				// only keep Low Stock (exclude "In Use" and other statuses)
+				.filter((it: any) => it.__status === "Low Stock")
+				.sort((a: any, b: any) => {
+					const avA = Number(a.__available ?? 0);
+					const avB = Number(b.__available ?? 0);
+					if (avA !== avB) return avA - avB;
+					return (
+						(Number(a.__total ?? 0) || 0) -
+						(Number(b.__total ?? 0) || 0)
+					);
+				});
+
+			setItems(low as Item[]);
 			setPage(1);
 		} catch {
 			setItems([]);
@@ -76,84 +147,88 @@ export default function LowStockAlert({ limit = 6 }: { limit?: number }) {
 			) : (
 				<>
 					<div className="divide-y divide-gray-200 dark:divide-gray-700">
-						{pagedItems.map((it) => (
-							<div
-								key={it.id}
-								className="flex items-center justify-between px-4 py-3"
-							>
-								<div className="min-w-0">
-									<div
-										onClick={() =>
-											router.replace(
-												`/dashboard/?tab=items&search=${encodeURIComponent(
-													it.name
-												)}`
-											)
-										}
-										className="text-sm font-medium text-gray-800 dark:text-gray-100 hover:underline cursor-pointer"
-									>
-										{it.name}
-									</div>
-									<div className="text-xs text-gray-500 dark:text-gray-400">
-										{it.supplierName
-											? `${it.supplierName} • `
-											: ""}
-										{it.location ?? "—"}
-									</div>
-									<div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-										{it.updated_at
-											? `Updated ${new Date(
-													it.updated_at
-											  ).toLocaleDateString(undefined, {
-													year: "numeric",
-													month: "short",
-													day: "numeric",
-											  })}`
-											: "No recent update"}
-									</div>
-								</div>
+						   {pagedItems.map((it) => {
+                                const available = Number(it.__available ?? 0);
+                                const total = Number(it.__total ?? 0);
+								const displayLeft = available; // available units
+								const pct = Math.min(
+									100,
+									Math.round(
+										(available / Math.max(1, threshold)) *
+											100
+									)
+								);
+                                return (
+                                    <div
+                                        key={it.id}
+                                        className="flex items-center justify-between px-4 py-3"
+                                    >
+                                        <div className="min-w-0">
+                                            <div
+                                                onClick={() =>
+                                                    router.replace(
+                                                        `/dashboard/?tab=items&search=${encodeURIComponent(
+                                                            it.name
+                                                        )}`
+                                                    )
+                                                }
+                                                className="text-sm font-medium text-gray-800 dark:text-gray-100 hover:underline cursor-pointer"
+                                            >
+                                                {it.name}
+                                            </div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                {it.supplierName
+                                                    ? `${it.supplierName} • `
+                                                    : ""}
+                                                {it.location ?? "—"}
+                                            </div>
+                                            <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                                {it.updated_at
+                                                    ? `Updated ${new Date(
+                                                            it.updated_at
+                                                      ).toLocaleDateString(undefined, {
+                                                            year: "numeric",
+                                                            month: "short",
+                                                            day: "numeric",
+                                                      })}`
+                                                    : "No recent update"}
+                                            </div>
+                                        </div>
 
-								<div className="flex flex-col items-end ml-4">
-									<div
-										className={`text-xs font-semibold px-2 py-1 rounded-full ${
-											it.quantity <=
-											Math.max(
-												1,
-												Math.floor(threshold / 2)
-											)
-												? "bg-red-100 text-red-700"
-												: "bg-yellow-100 text-yellow-800"
-										}`}
-									>
-										{it.quantity} left
-									</div>
-									<div className="w-24 h-2 rounded-full bg-gray-100 dark:bg-gray-700 mt-2 ">
-										<div
-											style={{
-												width: `${Math.min(
-													100,
-													(it.quantity /
-														Math.max(
-															1,
-															threshold
-														)) *
-														100
-												)}%`,
-											}}
-											className={`h-full ${
-												it.quantity <=
-												Math.max(
-													1,
-													Math.floor(threshold / 2)
-												)
-													? "bg-red-500"
-													: "bg-yellow-400"
-											} rounded-full`}
-										/>
-									</div>
-								</div>
-							</div>
-						))}
+                                        <div className="flex flex-col items-end ml-4">
+                                            <div
+                                                className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                                                    displayLeft <=
+                                                    Math.max(
+                                                        1,
+                                                        Math.floor(threshold / 2)
+                                                    )
+                                                        ? "bg-red-100 text-red-700"
+                                                        : "bg-yellow-100 text-yellow-800"
+                                                }`}
+                                            >
+												{displayLeft} left
+                                            </div>
+                                            <div className="w-24 h-2 rounded-full bg-gray-100 dark:bg-gray-700 mt-2 ">
+                                                <div
+                                                    style={{
+                                                        width: `${pct}%`,
+                                                    }}
+                                                    className={`h-full ${
+                                                        it.quantity <=
+                                                        Math.max(
+                                                            1,
+                                                            Math.floor(threshold / 2)
+                                                        )
+                                                            ? "bg-red-500"
+                                                            : "bg-yellow-400"
+                                                    } rounded-full`}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
 					</div>
 
 					{/* Pagination controls */}
