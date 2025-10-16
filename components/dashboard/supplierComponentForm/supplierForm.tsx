@@ -143,6 +143,7 @@ export default function SupplierForm({
 							<input
 								type="tel"
 								placeholder="Phone Number"
+								maxLength={11}
 								id="phone"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}

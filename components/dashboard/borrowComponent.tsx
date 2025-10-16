@@ -393,6 +393,7 @@ const BorrowComponent: React.FC<BorrowComponentProps> = ({ isDarkMode }) => {
 									</label>
 									<input
 										type="tel"
+										maxLength={11}
 										value={borrowForm.borrowerPhone}
 										onChange={(e) =>
 											setBorrowForm({
