@@ -83,12 +83,11 @@ export default function ItemsComponent() {
 		setCategories(loadedCategories);
 		setSuppliers(loadedSuppliers);
 
-		if (isAddMode && isManager) {
+		if (isAddMode) {
 			setShowForm(true);
 			setEditingId(undefined);
-		} else if (isAddMode && !isManager) {
-			router.replace("/dashboard/?tab=items");
 		}
+
 		if (searchedItems) {
 			setSearchTerm(searchedItems);
 			setPage(1);
